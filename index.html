@@ -139,6 +139,10 @@
 
   /* ---------- WHATSAPP PROOF (slide 4) ---------- */
   .proof-wrap{display:grid;grid-template-columns:auto 1fr;gap:6vw;align-items:center}
+  .proof-video{grid-template-columns:1.5fr 1fr;gap:4vw}
+  .vid-browser{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 40px 100px -30px rgba(0,0,0,.8);background:#0E1117}
+  .vid-browser video{display:block;width:100%;height:auto;background:#0A0D12}
   .phone{
     width:330px;height:670px;border-radius:46px;background:#000;
     border:11px solid #1b1b1d;box-shadow:0 40px 90px -24px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
@@ -401,9 +405,9 @@
     </div>
   </section>
 
-  <!-- 4 WHATSAPP PROOF -->
-  <section class="slide dark" data-bg="dark">
-    <div class="eyebrow">Prueba real · reactivación de paciente</div>
+  <!-- 4 WHATSAPP PROOF (animated phone) -->
+  <section class="slide dark" data-bg="dark" id="proofSlide">
+    <div class="eyebrow">Prueba real · el agente trabajando</div>
     <div class="proof-wrap">
       <div class="phone">
         <div class="notch"></div>
@@ -422,8 +426,8 @@
       </div>
       <div class="proof-copy">
         <h1>La IA conversa.<br><span class="muted">Tú cobras.</span></h1>
-        <p class="lede">Bases frías de hace meses. ADDAM las reactiva con una conversación natural — y la convierte en una hora agendada.</p>
-        <span class="result-chip" id="proof-chip">✓ Paciente reactivado · hora confirmada</span>
+        <p class="lede">Esto no es un demo. Es el agente de ADDAM gestionando conversaciones reales: busca la hora, agenda y deja todo confirmado — sin que nadie de tu equipo intervenga.</p>
+        <span class="result-chip" id="proof-chip">✓ Hora agendada · sesión gestionada por IA</span>
       </div>
     </div>
   </section>
@@ -630,11 +634,14 @@ function countUp(el){
 }
 
 const waScript=[
-  {t:'in',txt:'Hola Camila 👋 Soy del equipo de tu clínica dental. Vimos que tu última limpieza fue hace 7 meses.',ai:true,time:'14:02'},
-  {t:'out',txt:'Ah verdad… se me pasó por completo 😅',time:'14:05'},
-  {t:'in',txt:'Te entiendo, pasa seguido. Tengo un espacio este jueves 16:30 o viernes 11:00. ¿Cuál te acomoda?',ai:true,time:'14:05'},
-  {t:'out',txt:'El viernes a las 11 me viene perfecto',time:'14:07'},
-  {t:'in',txt:'Listo ✅ Te dejé agendada el viernes 11:00. Te llega la confirmación por aquí. ¡Nos vemos!',ai:true,time:'14:07'},
+  {t:'out',txt:'Hola! Quería ver si tienen hora para HIFU 🙏',time:'18:02'},
+  {t:'in',txt:'¡Hola Javiera! 😊 Claro que sí. Déjame revisar la disponibilidad para HIFU.',ai:true,time:'18:03'},
+  {t:'in',txt:'Si prefieres, te ayudo a buscar disponibilidad para la próxima semana (martes a viernes desde las 12:00 hrs) y dejamos tu cita agendada por aquí. ¿Te ayudo a revisarlo?',ai:true,time:'18:09'},
+  {t:'out',txt:'Te pasaste de amorosa, mil gracias!! Ahí encontré una hora que me acomoda 🙌',time:'19:35'},
+  {t:'in',txt:'¡Qué excelente noticia! Me alegra mucho que hayas encontrado un horario ideal para ti. ✨',ai:true,time:'19:36'},
+  {t:'out',txt:'Agende para jueves 18 con Dra Consuelo 15:00 para HIFU',time:'19:38'},
+  {t:'in',txt:'¡Perfecto, Javiera! Veo que tu cita quedó súper bien agendada para el jueves 18 a las 15:00 con la Dra. Consuelo. ✅',ai:true,time:'19:40'},
+  {t:'out',txt:'Súper, gracias!!!',time:'19:40'},
 ];
 
 function playWhatsApp(){
@@ -642,22 +649,30 @@ function playWhatsApp(){
   body.innerHTML='';
   const chip=document.getElementById('proof-chip');
   chip.classList.remove('show');
-  let delay=300;
+  let delay=600;
   waScript.forEach((m,idx)=>{
-    // typing indicator before incoming msgs
+    // typing time scales with message length (reading/writing feels real)
+    const typeTime=Math.min(2600,Math.max(900,m.txt.length*32));
+    // pause before this message: time the other person "reads & thinks"
+    const readPause=idx===0?0:Math.min(2200,Math.max(800,(waScript[idx-1].txt.length*14)));
     if(m.t==='in'){
-      const typing=document.createElement('div');
-      typing.className='typing'; typing.innerHTML='<span></span><span></span><span></span>';
-      setTimeout(()=>{ body.appendChild(typing); typing.classList.add('show'); body.scrollTop=body.scrollHeight; },delay);
-      delay+=700;
-      setTimeout(()=>{ typing.remove(); addBubble(m); },delay);
-      delay+=500;
+      // agent: show typing indicator, then the message
+      const startTyping=delay+readPause;
+      setTimeout(()=>{ const typing=document.createElement('div');
+        typing.className='typing show'; typing.id='typing-'+idx;
+        typing.innerHTML='<span></span><span></span><span></span>';
+        body.appendChild(typing); body.scrollTop=body.scrollHeight; },startTyping);
+      const showMsg=startTyping+typeTime;
+      setTimeout(()=>{ const t=document.getElementById('typing-'+idx); if(t)t.remove(); addBubble(m); },showMsg);
+      delay=showMsg+200;
     } else {
-      setTimeout(()=>addBubble(m),delay);
-      delay+=750;
+      // patient: short pause then message appears (no typing dots for outgoing)
+      const showMsg=delay+readPause+300;
+      setTimeout(()=>addBubble(m),showMsg);
+      delay=showMsg+200;
     }
   });
-  setTimeout(()=>chip.classList.add('show'),delay+200);
+  setTimeout(()=>chip.classList.add('show'),delay+700);
 
   function addBubble(m){
     const b=document.createElement('div');
