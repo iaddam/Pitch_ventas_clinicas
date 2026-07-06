@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>ADDAM — Acceso restringido</title>
+<style>
+  :root{--black:#0A0A0A;--blue:#0243FF;--white:#FFF;--gray-3:#98A2B3;--red:#F04438}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--black);color:var(--white);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
+  .gate-box{width:min(360px,90vw);text-align:center;padding:24px}
+  .brand-mark{width:34px;height:34px;border-radius:9px;background:var(--blue);display:flex;
+    align-items:center;justify-content:center;font-weight:800;font-size:17px;margin:0 auto 18px}
+  h2{font-size:18px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+  p{font-size:13px;color:var(--gray-3);margin-bottom:22px;line-height:1.5}
+  input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);
+    border-radius:10px;padding:13px 16px;color:var(--white);font-family:inherit;font-size:16px;
+    text-align:center;letter-spacing:.15em;outline:none;transition:border-color .15s}
+  input:focus{border-color:var(--blue)}
+  input.err{border-color:var(--red);animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  button{width:100%;margin-top:12px;background:var(--blue);color:var(--white);border:none;
+    border-radius:10px;padding:13px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  button:hover{filter:brightness(1.1)}
+  button:disabled{opacity:.6;cursor:wait}
+  .gate-err{font-size:12.5px;color:var(--red);margin-top:10px;min-height:16px}
+</style>
+</head>
+<body>
+<div class="gate-box">
+  <div class="brand-mark">A</div>
+  <h2>Calculadora de precios</h2>
+  <p>Contenido cifrado — uso interno ADDAM.<br>Ingresa la clave del equipo.</p>
+  <input type="password" id="gateInput" autocomplete="off" placeholder="clave" aria-label="Clave de acceso">
+  <button id="gateBtn">Entrar</button>
+  <div class="gate-err" id="gateErr"></div>
+</div>
+
+<script>
+/* El contenido real viaja cifrado con AES-256-GCM; la clave deriva por PBKDF2.
+   Sin la clave correcta este archivo no revela nada. */
+const PAYLOAD = __PAYLOAD__;
+
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+async function decrypt(pass){
+  const enc = new TextEncoder();
+  const km = await crypto.subtle.importKey("raw", enc.encode(pass), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey(
+    {name:"PBKDF2", salt:b64(PAYLOAD.salt), iterations:PAYLOAD.iter, hash:"SHA-256"},
+    km, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  const pt = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64(PAYLOAD.iv)}, key, b64(PAYLOAD.ct));
+  return new TextDecoder().decode(pt);
+}
+
+const input = document.getElementById("gateInput");
+const btn = document.getElementById("gateBtn");
+const err = document.getElementById("gateErr");
+
+async function tryKey(pass, silent){
+  btn.disabled = true; btn.textContent = "Verificando…";
+  try{
+    const html = await decrypt(pass);
+    sessionStorage.setItem("addam_calc_key", pass);
+    document.open(); document.write(html); document.close();
+  }catch(e){
+    btn.disabled = false; btn.textContent = "Entrar";
+    if (!silent){
+      err.textContent = "Clave incorrecta";
+      input.classList.add("err"); input.value = "";
+      setTimeout(()=>input.classList.remove("err"), 350);
+    }
+  }
+}
+
+btn.addEventListener("click", ()=>tryKey(input.value, false));
+input.addEventListener("keydown", e=>{ if(e.key==="Enter") tryKey(input.value, false); });
+const saved = sessionStorage.getItem("addam_calc_key");
+if (saved) tryKey(saved, true); else input.focus();
+</script>
+</body>
+</html>

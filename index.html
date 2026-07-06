@@ -90,6 +90,14 @@
   #nav.on-paper{color:var(--grey-2)}
   #nav.on-paper button{border-color:var(--line-dark);background:rgba(10,10,10,.03);color:var(--ink)}
   #nav.on-paper button:hover{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+  #nav .calc-link{
+    display:inline-flex;align-items:center;height:38px;padding:0 18px;border-radius:999px;
+    border:1px solid var(--line);background:rgba(255,255,255,.04);color:#fff;
+    font-size:.78rem;font-weight:600;letter-spacing:.04em;text-decoration:none;
+    cursor:pointer;transition:.2s;white-space:nowrap}
+  #nav .calc-link:hover{background:var(--cobalt);border-color:var(--cobalt)}
+  #nav.on-paper .calc-link{border-color:var(--line-dark);background:rgba(10,10,10,.03);color:var(--ink)}
+  #nav.on-paper .calc-link:hover{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
   .hint{position:fixed;bottom:28px;left:36px;z-index:40;font-size:.72rem;color:var(--grey);
     letter-spacing:.05em;opacity:.8}
   .hint.on-paper{color:var(--grey-2)}
@@ -596,6 +604,7 @@
 </div>
 
 <div id="nav">
+  <a class="calc-link" href="calc.html">Calculadora de precios</a>
   <span class="num"><span id="cur">1</span> / 10</span>
   <button id="prev" aria-label="Anterior">‹</button>
   <button id="next" aria-label="Siguiente">›</button>
