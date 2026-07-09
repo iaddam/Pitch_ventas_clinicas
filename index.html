@@ -276,6 +276,13 @@
   .calc-summary{font-size:.88rem;color:#CFF7EC}.calc-summary b{color:#fff}
   .allbtn{padding:.65rem 1.2rem;border-radius:99px;border:1px solid var(--cobalt);background:rgba(45,75,255,.15);color:#fff;font-weight:600;font-size:.82rem;cursor:pointer;transition:.2s}
   .allbtn:hover{background:var(--cobalt)}
+  .calc-adjust-row{display:flex;align-items:center;gap:1rem;margin-top:1.1rem;flex-wrap:wrap}
+  .calc-adjust-lbl{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);font-weight:700}
+  .calc-adjust{display:flex;gap:6px}
+  .calc-adjust button{padding:.42rem .72rem;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.03);
+    color:#C9CDD4;font-weight:700;font-size:.78rem;cursor:pointer;transition:.18s;font-variant-numeric:tabular-nums;font-family:inherit}
+  .calc-adjust button:hover{border-color:var(--cobalt-soft)}
+  .calc-adjust button.on{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
   @media(max-width:860px){.levers{grid-template-columns:1fr 1fr}}
 
   /* ---------- DASHBOARD SLIDE ---------- */
@@ -499,6 +506,16 @@
     <div class="calc-footer">
       <div class="calc-summary" id="cSummary">Enciende las 4 palancas y mira el salto completo.</div>
       <button class="allbtn" id="cAllBtn">Encender las 4 ✦</button>
+    </div>
+    <div class="calc-adjust-row">
+      <span class="calc-adjust-lbl">Ajustar facturación base</span>
+      <div class="calc-adjust" id="cAdjust">
+        <button data-adj="-20">−20%</button>
+        <button data-adj="-10">−10%</button>
+        <button class="on" data-adj="0">Base</button>
+        <button data-adj="10">+10%</button>
+        <button data-adj="20">+20%</button>
+      </div>
     </div>
   </section>
 
@@ -765,11 +782,11 @@ function playDashboard(){
 (function(){
   const f=n=>'$'+Math.round(n).toLocaleString('es-CL');
   const $=id=>document.getElementById(id);
-  let chairs=2;
+  let chairs=2, adjust=0;
   const PER_CHAIR=5432130;
   const LEVER_PCT={1:0.06,2:0.085,3:0.05,4:0.04};
   let on={1:false,2:false,3:false,4:false};
-  function baseline(){return PER_CHAIR*chairs;}
+  function baseline(){return PER_CHAIR*chairs*(1+adjust/100);}
   function leverGain(k){return baseline()*LEVER_PCT[k];}
   function render(){
     const base=baseline(); let total=base, activeGain=0;
@@ -791,9 +808,11 @@ function playDashboard(){
     const pct=Math.round(activeGain/base*100);
     $('cSummary').innerHTML=activeGain>0?('ADDAM suma <b>'+f(activeGain)+'/mes</b> ('+f(activeGain*12)+'/año) — un <b>+'+pct+'%</b> sin gastar más en publicidad.'):'Enciende las 4 palancas y mira el salto completo.';
     document.querySelectorAll('#calcSlide .calc-chair').forEach(c=>c.classList.toggle('on',+c.dataset.n===chairs||(chairs>=5&&c.dataset.n==='5')));
+    document.querySelectorAll('#calcSlide .calc-adjust button').forEach(b=>b.classList.toggle('on',+b.dataset.adj===adjust));
   }
   document.querySelectorAll('#calcSlide .lever').forEach(l=>l.addEventListener('click',()=>{const k=+l.dataset.k;on[k]=!on[k];render();}));
   document.querySelectorAll('#calcSlide .calc-chair').forEach(c=>c.addEventListener('click',()=>{chairs=+c.dataset.n;render();}));
+  document.querySelectorAll('#calcSlide .calc-adjust button').forEach(b=>b.addEventListener('click',()=>{adjust=+b.dataset.adj;render();}));
   $('cAllBtn').addEventListener('click',()=>{const allOn=Object.values(on).every(v=>v);on={1:!allOn,2:!allOn,3:!allOn,4:!allOn};$('cAllBtn').textContent=allOn?'Encender las 4 ✦':'Apagar todo';render();});
   render();
 })();
