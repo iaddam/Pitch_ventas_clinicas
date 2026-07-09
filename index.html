@@ -322,6 +322,12 @@
     cursor:pointer;white-space:nowrap;transition:.2s;border:none}
   .opp .exec:hover{filter:brightness(1.15)}
   .opp .exec.done{background:rgba(2,195,154,.18);color:var(--ok);pointer-events:none}
+  .opp .sev.ok{background:var(--ok);box-shadow:0 0 8px rgba(2,195,154,.6)}
+  .opp .live-badge{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;
+    background:rgba(2,195,154,.14);border:1px solid rgba(2,195,154,.32);color:var(--ok);
+    font-size:.62rem;font-weight:700;white-space:nowrap}
+  .opp .live-badge .live-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:livePulse 1.4s ease-in-out infinite}
+  @keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(2,195,154,.55)}50%{opacity:.55;box-shadow:0 0 0 5px rgba(2,195,154,0)}}
   .dash-right h1{font-size:clamp(1.6rem,3.2vw,2.7rem)}
   .qa-contrast{margin-top:1.6rem;display:flex;flex-direction:column;gap:10px}
   .qa{display:flex;gap:11px;align-items:flex-start;font-size:.86rem;line-height:1.4}
@@ -546,7 +552,7 @@
           <div class="opps-lbl">⚡ Oportunidades detectadas — un click las ejecuta</div>
           <div class="opp" data-i="1"><span class="sev hi"></span><div class="o-body"><div class="o-title"><span class="amt">$3.200.000</span> en presupuestos sin cobrar</div><div class="o-meta">12 pacientes · captura al 27%, meta 35%</div></div><button class="exec">Recapturar</button></div>
           <div class="opp" data-i="2"><span class="sev hi"></span><div class="o-body"><div class="o-title"><span class="amt">$1.850.000</span> en pacientes de control dormidos</div><div class="o-meta">41 pacientes inactivos +6 meses</div></div><button class="exec">Lanzar campaña</button></div>
-          <div class="opp" data-i="3"><span class="sev md"></span><div class="o-body"><div class="o-title">22 citas sin confirmar esta semana</div><div class="o-meta">no-show proyectado 16% si no se gestiona</div></div><button class="exec">Confirmar</button></div>
+          <div class="opp" data-i="3"><span class="sev ok"></span><div class="o-body"><div class="o-title">22 citas confirmándose esta semana</div><div class="o-meta">ADDAM confirma y reagenda solo · no-show contenido en 12%</div></div><div class="live-badge"><span class="live-dot"></span>Automatizado en tiempo real</div></div>
         </div>
       </div>
       <div class="dash-right">
@@ -773,7 +779,7 @@ function playDashboard(){
   const slide=document.getElementById('dashSlide');
   slide.querySelectorAll('[data-dcount]').forEach(el=>{el.textContent=(el.dataset.pre||'')+'0'+(el.dataset.suf||'');dCountUp(el);});
   const opps=[...slide.querySelectorAll('.opp')];
-  opps.forEach((o,idx)=>{o.classList.remove('in');const btn=o.querySelector('.exec');btn.classList.remove('done');
+  opps.forEach((o,idx)=>{o.classList.remove('in');const btn=o.querySelector('.exec');if(btn)btn.classList.remove('done');
     setTimeout(()=>o.classList.add('in'),500+idx*350);});
   // wire execute buttons
   slide.querySelectorAll('.exec').forEach(btn=>{
