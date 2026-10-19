@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITULO}}</title>
+<link rel="icon" type="image/svg+xml" href="assets/img/logotype.svg">
+<style>
+/* =====================================================================
+   ADDAM · pitch de ventas del vendedor (versión {{VERTICAL}}).
+   Fuente única: fuente/plantilla.html → python3 fuente/armar.py genera
+   index.html (dental) y salud.html (salud), con todo incrustado.
+   Escenario fijo 1920×1080 escalado a la pantalla.
+   ===================================================================== */
+@font-face{font-family:"Aeonik";font-weight:400;font-style:normal;font-display:swap;src:url("assets/fonts/fonnts.com-Aeonik-Regular.ttf") format("truetype")}
+@font-face{font-family:"Aeonik";font-weight:700;font-style:normal;font-display:swap;src:url("assets/fonts/fonnts.com-Aeonik-Bold.ttf") format("truetype")}
+:root{
+  --bg:#0E0E0E; --panel:#151515; --panel-line:rgba(254,254,254,.07);
+  --blue:#0243FF; --blue-2:#2E66FF; --blue-soft:#8FA8FF; --navy:#141E4A;
+  --white:#FEFEFE; --light:#F8F8F8;
+  --tx-1:#FEFEFE; --tx-2:#ACACAC; --tx-3:#878787;
+  --ink-1:#0C0C0C; --ink-2:#646464; --ink-3:#5B5B5B;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease:cubic-bezier(.22,.61,.36,1);
+  --f:"Aeonik",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#000;font-family:var(--f);-webkit-font-smoothing:antialiased;color:var(--tx-1)}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--bg)}
+.slide{position:absolute;inset:0;overflow:hidden;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .5s var(--ease),visibility 0s linear .5s}
+.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;transition:opacity .5s var(--ease),visibility 0s}
+.s-dark{background:radial-gradient(1500px 1100px at 100% 0%,#3A3A3A 0%,#1A1A1A 32%,#0E0E0E 62%)}
+.s-light{background:radial-gradient(1300px 1000px at 100% 0%,#C3D0FA 0%,#E2E8FB 30%,#F8F8F8 62%);color:var(--ink-1)}
+.s-cut{background:radial-gradient(1500px 1100px at 100% 0%,#3A3A3A 0%,#1A1A1A 32%,#0E0E0E 62%)}
+.abs{position:absolute}
+
+/* ---------- cromo de cada lámina ---------- */
+.hlogo{position:absolute;left:128px;top:48px;height:31px;width:auto}
+.eyebrow{position:absolute;left:128px;top:135px;font-size:23px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--blue-soft);white-space:nowrap}
+.s-light .eyebrow{color:var(--blue)}
+.title{position:absolute;left:128px;font-size:62px;line-height:1.04;letter-spacing:-.035em;font-weight:700;white-space:nowrap}
+.title .mute{color:var(--tx-3)}
+.s-light .title .mute{color:var(--ink-3)}
+.src{position:absolute;left:128px;top:999px;font-size:23px;color:var(--tx-3);white-space:nowrap}
+.s-light .src{color:var(--ink-2)}
+.num{position:absolute;right:128px;top:999px;font-size:23px;color:var(--tx-3);font-variant-numeric:tabular-nums}
+.s-light .num{color:var(--ink-2)}
+.desc{position:absolute;left:128px;font-size:26px;line-height:1.42;color:var(--tx-2)}
+.s-light .desc{color:var(--ink-2)}
+
+/* ---------- piezas comunes ---------- */
+.ic{position:absolute;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 30% 25%,#3D74FF 0%,#1452FF 45%,#0243FF 100%);
+  box-shadow:0 0 34px rgba(2,67,255,.55),0 0 0 1px rgba(255,255,255,.04) inset}
+.ic svg{width:42%;height:42%;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.panel{position:absolute;background:var(--panel);border:1px solid var(--panel-line);border-radius:28px}
+.bigcard{position:absolute;border-radius:24px;background:linear-gradient(135deg,#0243FF 0%,#1550FF 45%,#3570FF 100%);
+  box-shadow:0 0 70px rgba(2,67,255,.55)}
+.bigcard .bv{position:absolute;left:44px;top:40px;font-size:124px;line-height:1;letter-spacing:-.045em;font-weight:700}
+.bigcard .bl{position:absolute;left:44px;top:184px;width:120px;height:2px;background:rgba(255,255,255,.45)}
+.bigcard .inlogo{display:inline-block;height:.98em;width:auto;vertical-align:-.12em;margin-left:.15em;filter:brightness(0) invert(1)}
+.bigcard .bt{position:absolute;left:44px;top:208px;width:500px;font-size:27px;line-height:1.38;color:rgba(255,255,255,.92)}
+.pill{position:absolute;height:56px;border-radius:28px;padding:0 22px;display:flex;align-items:center;background:#1A2550;color:var(--blue-soft);font-size:27px;font-weight:700;white-space:nowrap}
+.rowt{position:absolute;font-size:28px;font-weight:700;white-space:nowrap}
+.blab{position:absolute;font-size:22px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.blab.b{color:var(--blue-soft)}.blab.g{color:#8A8A8A}
+.bar{position:absolute;height:56px;border-radius:8px;transform-origin:0 50%}
+.bar.b{background:linear-gradient(90deg,#3570FF,#0243FF);box-shadow:0 0 30px rgba(2,67,255,.55)}
+.bar.g{background:#4A4A4A}
+.bval{position:absolute;font-size:44px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+.sep{position:absolute;height:1px;background:rgba(254,254,254,.14)}
+.dots{position:absolute;display:grid;grid-template-columns:repeat(20,30px);gap:10px}
+.dots i{width:30px;height:30px;border-radius:50%;background:#2B2B2B;transition:background .25s,transform .25s}
+.dots i.b{background:var(--blue)}.dots i.l{background:var(--blue-soft)}
+.legend{position:absolute;display:flex;gap:34px;font-size:24px;white-space:nowrap}
+.legend span{display:flex;align-items:center;gap:12px;color:var(--tx-1)}
+.legend span.g{color:var(--tx-3)}
+.legend i{width:22px;height:22px;border-radius:50%;display:inline-block}
+
+/* ---------- entradas ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .slide .rv{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+  .slide.visible .rv{opacity:1;transform:none}
+  .slide.visible .d1{transition-delay:.08s}.slide.visible .d2{transition-delay:.16s}.slide.visible .d3{transition-delay:.26s}
+  .slide.visible .d4{transition-delay:.36s}.slide.visible .d5{transition-delay:.46s}.slide.visible .d6{transition-delay:.56s}
+  .slide.visible .d7{transition-delay:.66s}.slide.visible .d8{transition-delay:.76s}.slide.visible .d9{transition-delay:.86s}
+  .slide .bar{transform:scaleX(0);transition:transform 1s var(--ease-out)}
+  .slide.visible .bar{transform:none}
+  .slide.visible .bar.t2{transition-delay:.35s}
+}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(46,102,255,.75)}100%{box-shadow:0 0 0 26px rgba(46,102,255,0)}}
+.ping{animation:ping .9s ease-out}
+
+/* ---------- 1 · portada y 10 · corte ---------- */
+.cobrand{position:absolute;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:40px}
+.logo-anim{display:block;object-fit:cover;object-position:50% 48%;mix-blend-mode:screen;filter:contrast(1.15);pointer-events:none}
+.cobrand .x{font-size:44px;color:var(--tx-3);line-height:1}
+.cobrand .rs{display:block;width:auto}
+.ctitle{position:absolute;left:0;right:0;text-align:center;font-weight:700;letter-spacing:-.035em;line-height:1.06}
+.ctitle span{color:var(--blue-2)}
+@media (prefers-reduced-motion:no-preference){
+  .slide .cobrand .x,.slide .cobrand .rs{opacity:0;transform:translateX(-14px);transition:opacity .8s var(--ease-out) .3s,transform .8s var(--ease-out) .3s}
+  .slide.logo-done .cobrand .x,.slide.logo-done .cobrand .rs{opacity:1;transform:none}
+  .slide .after{opacity:0;transform:translateY(14px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
+  .slide.logo-done .after{opacity:1;transform:none;transition-delay:.45s}
+  .slide.logo-done .after.a2{transition-delay:.62s}
+  .slide.logo-done .after.a3{transition-delay:.85s}
+}
+
+/* ---------- 2 · cinco tareas ---------- */
+#s2 .track{position:absolute;left:128px;top:375px;width:1664px;height:3px;background:#C9D4FE;border-radius:2px}
+#s2 .track i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--blue);border-radius:2px;transition:width .7s cubic-bezier(.65,0,.35,1),opacity 1s}
+#s2 .node{position:absolute;top:340px;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 30% 25%,#3D74FF,#0243FF);box-shadow:0 0 30px rgba(2,67,255,.55);transition:filter .4s,opacity .4s,transform .45s var(--ease-out)}
+#s2 .node svg{width:36px;height:36px}
+#s2 .card{position:absolute;top:462px;width:312px;height:420px;background:#FEFEFE;border:1px solid rgba(12,12,12,.08);border-radius:22px;padding:34px 20px 34px 28px;
+  transition:transform .5s var(--ease-out),box-shadow .5s,opacity .5s}
+#s2 .card .n{font-size:27px;font-weight:700;color:var(--blue);letter-spacing:.04em}
+#s2 .card .ck{position:absolute;right:30px;top:38px;width:24px;height:24px;stroke:var(--blue);fill:none;stroke-width:2;transition:opacity .4s,transform .45s var(--ease-out)}
+#s2 .card h3{font-size:30px;line-height:1.2;letter-spacing:-.01em;margin-top:12px}
+#s2 .card p{font-size:24px;line-height:1.42;color:var(--ink-2);margin-top:12px}
+#s2 .adot{position:absolute;top:363px;left:120px;width:26px;height:26px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 6px rgba(2,67,255,.18),0 0 24px rgba(46,102,255,.8);
+  transition:left .7s cubic-bezier(.65,0,.35,1),opacity .4s;z-index:2}
+@media (prefers-reduced-motion:no-preference){
+  #s2 .node:not(.on){filter:grayscale(1) brightness(1.9);opacity:.45;transform:scale(.88)}
+  #s2 .card:not(.on){opacity:.55}
+  #s2 .card:not(.on) .ck{opacity:0;transform:scale(.4)}
+}
+
+/* ---------- 3 · corte de sección ---------- */
+#s3{background:radial-gradient(1600px 1300px at 0% 100%,#0B33C6 0%,#0D1E66 30%,#0E1532 52%,#0E0E0E 78%)}
+#s3 .iso{position:absolute;left:1120px;top:231px;width:640px;height:640px;overflow:visible}
+#s3 .ttl{position:absolute;left:128px;top:425px;font-size:114px;line-height:1;letter-spacing:-.04em;font-weight:700;white-space:nowrap}
+#s3 .eyebrow{top:383px;font-size:24px}
+#s3 .ubar{position:absolute;left:128px;top:589px;width:140px;height:8px;border-radius:4px;background:var(--blue-2);transform-origin:0 50%}
+@media (prefers-reduced-motion:no-preference){
+  #s3 .iso .ib{transform:translate(60px,-90px);opacity:0;transition:transform 1.3s var(--ease-out) .2s,opacity 1s .2s}
+  #s3 .iso .ic2{transform-box:fill-box;transform-origin:center;transform:scale(.3);opacity:0;transition:transform 1.1s var(--ease-out) .5s,opacity .8s .5s}
+  #s3.visible .iso .ib,#s3.visible .iso .ic2{transform:none;opacity:1}
+  #s3 .ubar{transform:scaleX(0);transition:transform .9s var(--ease-out) .7s}
+  #s3.visible .ubar{transform:none}
+}
+
+/* ---------- 4 · confirmar funciona; el que anula y el que no llega ---------- */
+#s4 .cal{position:absolute;top:546px;width:456px;height:344px;border-radius:20px;background:linear-gradient(160deg,rgba(2,67,255,.18),rgba(2,67,255,.04));border:1.5px solid rgba(46,102,255,.5)}
+#s4 .cal .ctag{position:absolute;left:26px;top:24px;padding:6px 14px;border-radius:999px;background:rgba(143,168,255,.16);color:var(--blue-soft);font-size:16px;font-weight:700;letter-spacing:.14em;white-space:nowrap}
+#s4 .cal .cok{position:absolute;right:24px;top:20px;width:40px;height:40px;border-radius:50%;background:var(--blue);display:grid;place-items:center;box-shadow:0 0 20px rgba(2,67,255,.6)}
+#s4 .cal .cok svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+#s4 .cal .cact{position:absolute;left:26px;top:74px;width:404px;font-size:21px;line-height:1.38;color:#D6D6D6}
+#s4 .cal .cnum{position:absolute;left:26px;top:150px;font-size:80px;line-height:1;font-weight:700;letter-spacing:-.04em}
+#s4 .cal .clab{position:absolute;left:26px;top:240px;width:190px;font-size:19px;line-height:1.35;color:var(--tx-2)}
+#s4 .cal .dots{left:auto;right:26px;top:142px;grid-template-columns:repeat(10,15px);gap:5px}
+#s4 .cal .dots i{width:15px;height:15px}
+
+/* ---------- 6 · mide campañas: el panel de Publicidad de ADDAM ---------- */
+#s6 .kpi6{position:absolute;top:160px;width:225px}
+#s6 .kpi6 .kl{font-size:14px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#8A8A8A;white-space:nowrap}
+#s6 .kpi6 .kv{font-size:40px;font-weight:700;letter-spacing:-.02em;margin-top:8px;white-space:nowrap;font-variant-numeric:tabular-nums}
+#s6 .kpi6 .ks{font-size:15px;line-height:1.3;color:var(--tx-3);margin-top:6px;white-space:nowrap}
+#s6 .fun6{position:absolute;inset:0}
+#s6 .fdiv{position:absolute;top:350px;height:250px;width:1px;background:rgba(254,254,254,.09)}
+#s6 .fnum{position:absolute;top:352px;font-size:34px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+#s6 .farea{position:absolute;top:402px;overflow:visible}
+#s6 .fpill{position:absolute;top:520px;transform:translateX(-50%);padding:4px 12px;border-radius:8px;background:var(--blue);font-size:17px;font-weight:700;box-shadow:0 0 16px rgba(2,67,255,.5)}
+#s6 .flab6{position:absolute;top:572px;font-size:18px;color:var(--tx-2)}
+#s6 .donut{position:absolute;width:200px;height:200px;transform:rotate(-90deg)}
+#s6 .dseg{fill:none;stroke-width:26;transition:stroke-dasharray .9s var(--ease-out)}
+#s6 .dcen{position:absolute;width:200px;text-align:center}
+#s6 .dcen b{display:block;font-size:42px;line-height:1;letter-spacing:-.02em}
+#s6 .dcen span{display:block;font-size:16px;color:var(--tx-3);margin-top:6px}
+#s6 .legend6{position:absolute;left:1066px;top:686px;width:683px}
+#s6 .lrow{display:grid;grid-template-columns:26px 1fr 70px 60px;align-items:center;height:46px;border-top:1px solid rgba(254,254,254,.08);font-size:20px}
+#s6 .lrow i{width:16px;height:16px;border-radius:4px}
+#s6 .lrow .lt small{display:block;font-size:14px;color:var(--tx-3);margin-top:1px}
+#s6 .lrow b{text-align:right;font-variant-numeric:tabular-nums}
+#s6 .lrow em{font-style:normal;text-align:right;color:var(--tx-3);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:no-preference){
+  #s6 .farea{clip-path:inset(0 100% 0 0);transition:clip-path 1.5s var(--ease-out) .5s}
+  #s6.visible .farea{clip-path:inset(0 0 0 0)}
+  #s6 .fpill{opacity:0;transition:opacity .4s}
+  #s6 .fpill.on{opacity:1}
+}
+
+/* ---------- Pilar 04 · responde 24/7 (traída del pitch comercial, lámina «65 de 168») ---------- */
+#s24 .wk{position:absolute;left:816px;top:282px;display:grid;grid-template-columns:52px repeat(24,32px);column-gap:4.7px;row-gap:6px;align-items:center}
+#s24 .wk .hh{font-size:15px;color:var(--tx-3);height:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+#s24 .wk .dd{font-size:17px;font-weight:700;color:var(--tx-2)}
+#s24 .wk .c{position:relative;height:30px;border-radius:6px;background:rgba(254,254,254,.05);border:1px solid rgba(254,254,254,.06);transition:background .45s var(--ease),border-color .45s,box-shadow .45s}
+#s24 .wk .c.cc.on{background:rgba(254,254,254,.82);border-color:rgba(254,254,254,.9)}
+#s24 .wk .c.ad.on{background:var(--blue);border-color:var(--blue-2);box-shadow:0 0 14px rgba(2,67,255,.35)}
+#s24 .wdot{position:absolute;left:50%;top:50%;width:22px;height:22px;border-radius:50%;background:var(--blue);transform:translate(-50%,-50%) scale(.3);opacity:0;
+  box-shadow:0 0 0 5px rgba(2,67,255,.2),0 0 22px rgba(46,102,255,.8);transition:opacity .35s,transform .45s var(--ease-out);z-index:2}
+#s24 .wdot.in{opacity:1;transform:translate(-50%,-50%) scale(1.25)}
+#s24 .wdot.out{opacity:0;transform:translate(-50%,-50%) scale(.6);transition:opacity .6s,transform .6s}
+#s24 .cap{position:absolute;left:816px;top:866px;font-size:20px;color:var(--tx-3);white-space:nowrap}
+
+/* ---------- 7 · caso cupones ---------- */
+.steps .st{position:absolute;left:128px}
+.steps .ic{width:84px;height:84px}
+.steps .k{position:absolute;left:108px;font-size:22px;letter-spacing:.14em;font-weight:700;color:var(--blue-soft);white-space:nowrap}
+.steps .h{position:absolute;left:108px;font-size:30px;font-weight:700;white-space:nowrap}
+.steps .p{position:absolute;left:108px;font-size:24px;color:var(--tx-2);white-space:nowrap}
+.dash{position:absolute;left:128px;width:2px;background:repeating-linear-gradient(180deg,#5A5A5A 0 8px,transparent 8px 14px);transform-origin:50% 0}
+@media (prefers-reduced-motion:no-preference){
+  .slide .dash{transform:scaleY(0);transition:transform .5s var(--ease-out)}
+  .slide.visible .dash{transform:none}
+}
+#s7 .hero{position:absolute;left:900px;top:176px;width:892px;height:236px;border-radius:28px;background:linear-gradient(120deg,#0243FF 0%,#1452FF 50%,#3A72FF 100%);box-shadow:0 0 80px rgba(2,67,255,.5)}
+#s7 .hero .k{position:absolute;left:36px;top:40px;font-size:22px;letter-spacing:.16em;font-weight:700;color:#D9E3FF}
+#s7 .hero .v{position:absolute;left:34px;top:72px;font-size:84px;line-height:1;letter-spacing:-.04em;font-weight:700}
+#s7 .hero .t{position:absolute;left:36px;top:174px;font-size:27px;color:rgba(255,255,255,.92)}
+#s7 .sm{position:absolute;top:471px;width:281px;height:270px;border-radius:24px;background:var(--panel);border:1px solid var(--panel-line)}
+#s7 .sm .k{position:absolute;left:28px;top:28px;width:200px;font-size:16px;line-height:1.35;letter-spacing:.12em;font-weight:700;color:#8A8A8A}
+#s7 .sm .v{position:absolute;left:26px;top:92px;font-size:64px;line-height:1;letter-spacing:-.04em;font-weight:700;color:var(--blue-soft);white-space:nowrap}
+#s7 .sm .t{position:absolute;left:28px;top:172px;width:228px;font-size:21px;line-height:1.35;color:var(--tx-2)}
+#s7 .sm.hi{border:1.5px solid rgba(46,102,255,.6);background:linear-gradient(160deg,rgba(2,67,255,.2),rgba(2,67,255,.05))}
+#s7 .sm.hi .v{color:#fff}
+
+/* ---------- 9 · agente que razona: bot de menús vs ADDAM, con el mismo mensaje ---------- */
+#s8 .side{position:absolute;top:258px;display:flex;align-items:center;gap:12px;font-size:21px;letter-spacing:.14em;font-weight:700;white-space:nowrap}
+#s8 .side.bot{left:128px;color:#7A7A7A}
+#s8 .side.ad{left:982px;color:var(--blue)}
+#s8 .side i{width:14px;height:14px;border-radius:50%;background:#B5B5B5}
+#s8 .side svg{width:26px;height:26px}
+#s8 .pane{position:absolute;top:292px;width:810px;height:512px;border-radius:28px;background:#EBEBEB;border:1px solid rgba(12,12,12,.06);overflow:hidden}
+#s8 .pane.ad{border:2px solid rgba(2,67,255,.55);box-shadow:0 30px 70px -40px rgba(2,67,255,.6)}
+#s8 .conv{position:absolute;inset:0;padding:24px 26px;display:flex;flex-direction:column;gap:12px}
+#s8 .m{max-width:560px;padding:14px 18px;border-radius:18px;font-size:22px;line-height:1.36}
+#s8 .m.pt{align-self:flex-start;background:#FEFEFE;color:var(--ink-1);box-shadow:0 6px 18px -12px rgba(0,0,0,.25);border-top-left-radius:6px}
+#s8 .m.bot{align-self:flex-end;background:#D4D4D4;color:#3F3F3F;border-top-right-radius:6px}
+#s8 .m.bot small{display:block;font-size:19px;color:#5E5E5E;margin-top:4px}
+#s8 .m.ad{align-self:flex-end;background:var(--blue);color:#fff;border-top-right-radius:6px;box-shadow:0 14px 30px -16px rgba(2,67,255,.7)}
+#s8 .chip{align-self:center;margin-top:4px;padding:8px 18px;border-radius:999px;font-size:19px;font-weight:700;white-space:nowrap}
+#s8 .chip.ko{background:rgba(229,72,77,.12);color:#C2363B;border:1px solid rgba(229,72,77,.35)}
+#s8 .chip.ok{background:rgba(31,199,126,.14);color:#12855A;border:1px solid rgba(31,199,126,.45)}
+#s8 .typing{align-self:flex-end;display:flex;gap:6px;padding:15px 18px;border-radius:18px;border-top-right-radius:6px}
+#s8 .typing.b{background:#D4D4D4}#s8 .typing.a{background:var(--blue)}
+#s8 .typing i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.9);animation:blink 1.2s infinite}
+#s8 .typing.b i{background:#7A7A7A}
+#s8 .typing i:nth-child(2){animation-delay:.2s}#s8 .typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+#s8 .pop{animation:popIn .4s var(--ease-out) both}
+@keyframes popIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+#s8 .qline{position:absolute;left:128px;top:828px;width:1664px;height:1px;background:rgba(12,12,12,.1)}
+#s8 .q{position:absolute;top:850px;width:540px}
+#s8 .q .ic{left:0;top:0;width:56px;height:56px}
+#s8 .q h4{position:absolute;left:76px;top:2px;font-size:26px;font-weight:700;white-space:nowrap}
+#s8 .q p{position:absolute;left:76px;top:40px;width:450px;font-size:21px;line-height:1.36;color:var(--ink-2)}
+
+/* ---------- 9 · conexión ---------- */
+#s9 .tagx{position:absolute;left:128px;top:300px;height:50px;width:300px;border-radius:25px;background:var(--blue);display:flex;align-items:center;padding-left:20px;font-size:23px;font-weight:700;letter-spacing:.14em}
+#s9 .circ{position:absolute;border-radius:50%;display:grid;place-items:center}
+#s9 .navy{background:radial-gradient(circle at 35% 30%,#1D2C70,#101A45);border:2px solid #2E5BFF;box-shadow:0 0 30px rgba(2,67,255,.35)}
+#s9 .lbl{position:absolute;text-align:center;font-size:30px;font-weight:700;white-space:nowrap}
+#s9 .lsub{position:absolute;text-align:center;font-size:24px;color:var(--tx-2);white-space:nowrap}
+#s9 .rl{position:absolute;font-size:30px;font-weight:700;white-space:nowrap}
+#s9 .rs{position:absolute;font-size:24px;line-height:1.38;color:var(--tx-2)}
+#s9 svg.wires{position:absolute;inset:0;width:1920px;height:1080px;overflow:visible;pointer-events:none}
+#s9 .wire{fill:none;stroke:var(--blue-2);stroke-width:2.5}
+#s9 .pulse{fill:none;stroke:#FFFFFF;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:60 900;stroke-dashoffset:960;opacity:.9}
+#s9 .chain{position:absolute;left:585px;top:822px;width:1207px;height:50px}
+#s9 .chip{position:absolute;top:0;height:50px;border-radius:25px;border:1.5px solid #3C3C3C;display:flex;align-items:center;padding:0 14px;font-size:24px;font-weight:700;color:#DBDBDB;white-space:nowrap;background:var(--bg);transition:border-color .35s,color .35s,box-shadow .35s}
+#s9 .chip.on{border-color:var(--blue-2);color:#fff;box-shadow:0 0 18px rgba(46,102,255,.45)}
+#s9 .dotl{position:absolute;top:24px;height:2px;background:repeating-linear-gradient(90deg,#5A5A5A 0 3px,transparent 3px 7px)}
+@media (prefers-reduced-motion:no-preference){
+  #s9.visible .pulse{animation:pulse 2.6s linear infinite}
+  #s9.visible .pulse.p2{animation-delay:.9s}#s9.visible .pulse.p3{animation-delay:1.3s}
+  #s9.visible .dotl{animation:march 1s linear infinite}
+}
+@keyframes pulse{to{stroke-dashoffset:0}}
+@keyframes march{to{background-position:14px 0}}
+
+/* ---------- 11 · qué ofrecemos ---------- */
+#s11 .oc{position:absolute;left:813px;width:979px;height:238px;border-radius:28px;background:var(--panel);border:1px solid var(--panel-line)}
+#s11 .oc .ic{left:44px;top:71px;width:96px;height:96px}
+#s11 .oc h4{position:absolute;left:168px;font-size:34px;font-weight:700;white-space:nowrap}
+#s11 .oc p{position:absolute;left:168px;width:790px;font-size:26px;line-height:1.38;color:var(--tx-2)}
+@media (prefers-reduced-motion:no-preference){
+  #s11 .oc{opacity:0;transform:translateX(30px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+  #s11.visible .oc{opacity:1;transform:none}
+  #s11.visible .oc.o2{transition-delay:.22s}#s11.visible .oc.o3{transition-delay:.44s}
+}
+
+/* ---------- 12 · plan piloto ---------- */
+#s12 .pbar{position:absolute;left:128px;top:330px;width:1664px;height:64px;border-radius:32px;background:linear-gradient(90deg,#0243FF 0%,#1550FF 50%,#2E66FF 100%);transform-origin:0 50%}
+#s12 .pbar b{position:absolute;left:32px;top:18px;font-size:26px;letter-spacing:.14em}
+#s12 .pbar span{position:absolute;right:32px;top:19px;font-size:26px;color:rgba(255,255,255,.88);white-space:nowrap}
+#s12 .pc{position:absolute;top:470px;width:396px;height:362px;border-radius:24px;background:var(--panel);border:1px solid var(--panel-line)}
+#s12 .pc .ic{left:32px;top:36px;width:72px;height:72px}
+#s12 .pc .bn{position:absolute;right:32px;top:52px;font-size:58px;line-height:1;font-weight:700;color:#282828;letter-spacing:-.02em}
+#s12 .pc h4{position:absolute;left:32px;top:130px;font-size:34px;font-weight:700}
+#s12 .pc p{position:absolute;left:32px;top:186px;width:340px;font-size:26px;line-height:1.4;color:var(--tx-2)}
+#s12 .cn{position:absolute;top:540px;width:26px;height:2px;background:#3A3A3A}
+#s12 .foot{position:absolute;left:128px;top:872px;font-size:28px;font-weight:700;color:var(--blue-soft);white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){
+  #s12 .pbar{transform:scaleX(0);transition:transform 1s var(--ease-out) .15s}
+  #s12.visible .pbar{transform:none}
+  #s12 .pbar b,#s12 .pbar span{opacity:0;transition:opacity .5s .8s}
+  #s12.visible .pbar b,#s12.visible .pbar span{opacity:1}
+  #s12 .pc .bn{transition:color .5s}
+  #s12 .pc.on .bn{color:#3A3A3A}
+}
+
+/* ---------- 13 · fases ---------- */
+#s13 .tl{position:absolute;left:128px;top:279px;width:1664px;height:2px;background:#3A3A3A}
+#s13 .tl i{position:absolute;left:0;top:0;bottom:0;width:100%;background:linear-gradient(90deg,var(--blue-2),rgba(46,102,255,.15));transform-origin:0 50%}
+#s13 .td{position:absolute;top:266px;width:28px;height:28px;border-radius:50%;background:var(--blue);box-shadow:0 0 18px rgba(2,67,255,.8)}
+#s13 .fc{position:absolute;top:320px;width:537px;height:380px;border-radius:24px;background:var(--panel);border:1px solid var(--panel-line);padding:36px 32px}
+#s13 .fc .k{font-size:22px;letter-spacing:.14em;font-weight:700;color:var(--blue-soft);white-space:nowrap}
+#s13 .fc h4{font-size:34px;line-height:1.18;font-weight:700;margin-top:14px}
+#s13 .fc p{font-size:26px;line-height:1.4;color:var(--tx-2);margin-top:12px}
+#s13 .gc{position:absolute;top:727px;height:179px;border-radius:24px;background:var(--panel);border:1px solid var(--panel-line)}
+#s13 .gc .ic{left:40px;top:53px;width:72px;height:72px}
+#s13 .gc h4{position:absolute;left:136px;font-size:32px;font-weight:700;white-space:nowrap}
+#s13 .gc p{position:absolute;left:136px;font-size:26px;line-height:1.38;color:var(--tx-2)}
+@media (prefers-reduced-motion:no-preference){
+  #s13 .tl i{transform:scaleX(0);transition:transform 1.4s var(--ease-out) .2s}
+  #s13.visible .tl i{transform:none}
+  #s13 .td{transform:scale(0);transition:transform .5s var(--ease-out)}
+  #s13.visible .td{transform:none}
+  #s13.visible .td.t1{transition-delay:.25s}#s13.visible .td.t2{transition-delay:.75s}#s13.visible .td.t3{transition-delay:1.25s}
+}
+
+/* ---------- 14 · datos ---------- */
+#s14 .dc{position:absolute;width:820px;height:235px;border-radius:28px;background:var(--panel);border:1px solid var(--panel-line)}
+#s14 .dc .ic{left:40px;top:76px;width:84px;height:84px}
+#s14 .dc h4{position:absolute;left:150px;font-size:32px;font-weight:700;white-space:nowrap}
+#s14 .dc p{position:absolute;left:150px;width:640px;font-size:26px;line-height:1.38;color:var(--tx-2)}
+#s14 .bbar{position:absolute;left:128px;top:826px;width:1664px;height:80px;border-radius:40px;background:linear-gradient(90deg,#0243FF 0%,#1550FF 50%,#2E66FF 100%);font-size:26px;transform-origin:0 50%}
+#s14 .bbar b{position:absolute;left:40px;top:27px}
+#s14 .bbar span{position:absolute;top:27px;color:rgba(255,255,255,.9);white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){
+  #s14 .bbar{transform:scaleX(0);transition:transform 1s var(--ease-out) .6s}
+  #s14.visible .bbar{transform:none}
+}
+
+/* ---------- navegación ---------- */
+#progress{position:absolute;left:0;bottom:0;height:8px;width:1920px;background:var(--blue);transform-origin:0 50%;transform:scaleX(0);transition:transform .5s var(--ease);z-index:40}
+#navb{position:absolute;right:40px;bottom:72px;z-index:41;display:flex;gap:10px;opacity:0;transition:opacity .3s}
+body.mouse #navb{opacity:1}
+#navb button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,20,.6);color:#fff;font:inherit;font-size:20px;cursor:pointer}
+#navb button:hover{background:var(--blue);border-color:var(--blue)}
+
+/* ---------- personalización: nombre de la clínica ---------- */
+.cname{display:block;font-size:84px;line-height:1;font-weight:700;letter-spacing:-.03em;color:#fff;white-space:nowrap}
+body.no-cli .cli-only{display:none!important}
+@media (prefers-reduced-motion:no-preference){
+  .slide .cobrand .cname{opacity:0;transform:translateX(-14px);transition:opacity .8s var(--ease-out) .3s,transform .8s var(--ease-out) .3s}
+  .slide.logo-done .cobrand .cname{opacity:1;transform:none}
+}
+.cliedit{position:absolute;left:50%;top:868px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:10px 12px 10px 22px;border-radius:999px;
+  background:rgba(254,254,254,.06);border:1px solid rgba(254,254,254,.16);font-size:17px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
+  opacity:0;transition:opacity .3s;z-index:5}
+body.mouse .cliedit,.cliedit:focus-within{opacity:1}
+.cliedit input{width:460px;padding:8px 14px;border-radius:999px;border:0;outline:0;background:rgba(254,254,254,.08);color:#fff;font:inherit;font-size:20px;letter-spacing:0;text-transform:none}
+.cliedit input:focus{background:rgba(46,102,255,.25)}
+
+/* ---------- 2 · el punto ciego (el punto ADDAM recorre y arregla cada fuga) ---------- */
+#sP .jrn{position:absolute;left:128px;top:300px;width:1664px;height:132px}
+#sP .amark{position:absolute;left:11px;top:-7px;width:64px;height:64px}
+#sP .amark path{fill:var(--white)}
+#sP .jrn-line{position:absolute;left:76px;right:0;top:43px;height:2px;background:rgba(254,254,254,.22)}
+#sP .jrn-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,var(--blue),var(--blue-2));box-shadow:0 0 12px rgba(46,102,255,.7);transition:width .9s cubic-bezier(.65,0,.35,1)}
+#sP .pdot{position:absolute;left:24px;top:44px;width:26px;height:26px;border-radius:50%;background:var(--blue);transform:translate(-50%,-50%);z-index:3;
+  box-shadow:0 0 0 6px rgba(2,67,255,.18),0 0 28px rgba(46,102,255,.75);transition:left .9s cubic-bezier(.65,0,.35,1)}
+#sP .jrn-nodes{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+#sP .jn{display:flex;flex-direction:column;align-items:center;text-align:center}
+#sP .jn .d0{width:22px;height:22px;border-radius:50%;background:var(--bg);border:2px solid rgba(254,254,254,.55);margin-top:33px;transition:background .4s,border-color .4s,box-shadow .4s}
+#sP .jn.on .d0{background:var(--blue);border-color:var(--blue-2);box-shadow:0 0 16px rgba(46,102,255,.8)}
+#sP .jn .n{font-size:24px;font-weight:700;margin-top:18px;line-height:1.2}
+#sP .jn .t{font-size:18px;color:var(--tx-3);margin-top:6px}
+#sP .leaks{position:absolute;left:128px;top:472px;width:1664px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+#sP .leak{height:300px;border-radius:22px;background:rgba(254,254,254,.035);border:1px solid var(--panel-line);position:relative;overflow:hidden;display:grid;transition:background .6s,border-color .6s}
+#sP .leak::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#FF6B4A;transition:background .6s}
+#sP .leak .face{grid-area:1/1;padding:30px 30px 30px 34px;transition:opacity .55s var(--ease-out),transform .55s var(--ease-out)}
+#sP .leak .fix{opacity:0;transform:translateY(12px)}
+#sP .leak .k{font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:#FF6B4A;font-weight:700}
+#sP .leak .fix .k{color:var(--blue-soft)}
+#sP .leak h3{font-size:30px;line-height:1.18;margin-top:14px;letter-spacing:-.01em}
+#sP .leak p{font-size:21px;line-height:1.45;color:var(--tx-2);margin-top:14px}
+#sP .leak.fixed{background:rgba(2,67,255,.12);border-color:rgba(46,102,255,.55)}
+#sP .leak.fixed::before{background:var(--blue)}
+#sP .leak.fixed .prob{opacity:0;transform:translateY(-12px)}
+#sP .leak.fixed .fix{opacity:1;transform:none}
+#sP .punch{position:absolute;left:128px;top:830px;width:1664px;height:60px}
+#sP .punch span{position:absolute;left:0;top:0;font-size:42px;line-height:1.2;letter-spacing:-.02em;font-weight:700;white-space:nowrap;transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+#sP .punch i{font-style:normal;color:var(--tx-3)}
+#sP .punch .p2{opacity:0;transform:translateY(12px)}
+#sP .punch .p2 i{color:var(--blue-soft)}
+#sP.done .punch .p1{opacity:0;transform:translateY(-12px)}
+#sP.done .punch .p2{opacity:1;transform:none}
+#sP .hintb{position:absolute;right:128px;top:146px;font-size:16px;color:var(--tx-3);letter-spacing:.08em;opacity:0;transition:opacity .3s}
+body.mouse #sP:not(.done) .hintb{opacity:1}
+
+/* ---------- calculadora con datos medidos ---------- */
+#sC .cpanel{position:absolute;left:128px;top:300px;width:880px;height:620px;border-radius:28px;background:var(--panel);border:1px solid var(--panel-line)}
+#sC .fld{position:absolute;left:170px;width:796px}
+#sC .fld .row{display:flex;justify-content:space-between;align-items:baseline}
+#sC .fld label{font-size:22px;color:#D6D6D6}
+#sC .fld output{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+#sC .fld .hint{font-size:16px;color:var(--tx-3);margin-top:2px}
+#sC input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;margin-top:6px;cursor:pointer}
+#sC input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--blue) 0 var(--p,50%),rgba(254,254,254,.14) var(--p,50%) 100%)}
+#sC input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:rgba(254,254,254,.14)}
+#sC input[type=range]::-moz-range-progress{height:6px;border-radius:99px;background:var(--blue)}
+#sC input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;margin-top:-10px;box-shadow:0 0 0 6px rgba(2,67,255,.3)}
+#sC input[type=range]::-moz-range-thumb{width:26px;height:26px;border:0;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(2,67,255,.3)}
+#sC input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 9px rgba(2,67,255,.5)}
+#sC .res{position:absolute;left:1040px;width:752px;border-radius:28px}
+#sC .res.r1{top:300px;height:340px;background:linear-gradient(135deg,#0243FF 0%,#1550FF 45%,#3570FF 100%);box-shadow:0 0 70px rgba(2,67,255,.5)}
+#sC .res.r2{top:664px;height:256px;background:var(--panel);border:1.5px solid rgba(46,102,255,.5)}
+#sC .res .k{position:absolute;left:44px;top:38px;font-size:18px;letter-spacing:.16em;font-weight:700;color:rgba(255,255,255,.82)}
+#sC .res.r2 .k{color:var(--blue-soft)}
+#sC .res .v{position:absolute;left:42px;top:76px;font-size:116px;line-height:1;letter-spacing:-.045em;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+#sC .res.r2 .v{top:72px;font-size:84px}
+#sC .res .t{position:absolute;left:44px;top:220px;width:660px;font-size:25px;line-height:1.38;color:rgba(255,255,255,.92)}
+#sC .res.r2 .t{top:172px;font-size:23px;color:var(--tx-2)}
+#sC .cnote{position:absolute;left:128px;top:962px;width:1500px;font-size:19px;line-height:1.42;color:var(--tx-3)}
+
+/* ---------- cómo cobramos ---------- */
+#sPr .pc2{position:absolute;top:300px;height:500px;border-radius:28px;padding:44px 48px}
+#sPr .pc2.old{left:128px;width:780px;background:#ECECEC;border:1px solid rgba(12,12,12,.06)}
+#sPr .pc2.new{left:932px;width:860px;background:linear-gradient(140deg,#0234D6 0%,var(--blue) 60%,#3D6BFF 100%);color:#fff;box-shadow:0 40px 90px -40px rgba(2,67,255,.75)}
+#sPr .pc2 .k{font-size:17px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--ink-3)}
+#sPr .pc2.new .k{color:rgba(255,255,255,.82)}
+#sPr .pc2 h3{font-size:44px;line-height:1.1;letter-spacing:-.02em;margin-top:16px}
+#sPr .pc2.old h3{color:#4A4A4A}
+#sPr .pc2 ul{list-style:none;margin-top:30px;display:flex;flex-direction:column;gap:18px}
+#sPr .pc2 li{font-size:24px;line-height:1.4;padding-left:38px;position:relative}
+#sPr .pc2.old li{color:var(--ink-2)}
+#sPr .pc2.old li::before{content:"";position:absolute;left:4px;top:15px;width:16px;height:2px;background:var(--ink-3)}
+#sPr .pc2.new li::before{content:"";position:absolute;left:0;top:7px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/14px no-repeat}
+#sPr .pfoot{position:absolute;left:128px;top:846px;font-size:22px;color:var(--ink-2)}
+#sPr .pbtn{position:absolute;right:128px;top:830px;display:inline-flex;align-items:center;gap:12px;height:64px;padding:0 32px;border-radius:32px;background:var(--ink-1);color:#fff;font-size:22px;font-weight:700;text-decoration:none;transition:background .2s}
+#sPr .pbtn:hover{background:var(--blue)}
+
+/* ---------- cierre con agenda ---------- */
+#s15 .ctas{position:absolute;left:0;right:0;top:700px;display:flex;justify-content:center;gap:20px}
+#s15 .cta{display:inline-flex;align-items:center;gap:12px;height:72px;padding:0 38px;border-radius:36px;font-size:24px;font-weight:700;text-decoration:none;color:#fff;border:1.5px solid rgba(254,254,254,.3);transition:background .2s,border-color .2s}
+#s15 .cta.pri{background:var(--blue);border-color:var(--blue);box-shadow:0 0 40px rgba(2,67,255,.55)}
+#s15 .cta:hover{border-color:#fff}
+#s15 .cta[hidden]{display:none}
+#navb a{height:44px;padding:0 18px;border-radius:22px;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,20,.6);color:#fff;font-size:16px;font-weight:700;display:inline-flex;align-items:center;text-decoration:none}
+#navb a:hover{background:var(--blue);border-color:var(--blue)}
+@media print{.cliedit,#sP .hintb{display:none!important}}
+
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{overflow:visible;height:auto}
+  .deck-stage{position:static;transform:none!important;height:auto}
+  .slide{position:relative;width:1920px;height:1080px;visibility:visible!important;opacity:1!important;break-after:page}
+  #navb,#progress{display:none}
+  *{animation:none!important;transition:none!important}
+  .slide *{opacity:1!important;transform:none!important}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="deck-stage" id="stage">
+
+<!-- ===================== 1 · PORTADA ===================== -->
+<section class="slide s-dark" id="s1" data-chrome="none">
+  <div class="cobrand" style="top:218px">
+    <video class="logo-anim" id="logo1" src="assets/video/logo-intro-dark.mp4" muted playsinline preload="auto" aria-label="ADDAM" style="width:685px;height:152px;margin:0 -137px"></video>
+    <span class="x cli-only">×</span>
+    <span class="cname cli-only"></span>
+  </div>
+  <p class="after abs" style="left:0;right:0;top:403px;text-align:center;font-size:22.5px;letter-spacing:.3em;color:var(--tx-3)">{{EYEBROW_PORTADA}}</p>
+  <h1 class="ctitle after a2" style="top:450px;font-size:105.5px">Que ningún paciente se quede<br><span>en el camino.</span></h1>
+  <p class="after a3 abs" id="fechaHoy" style="left:128px;top:999px;font-size:24px;color:var(--tx-3)"></p>
+  <p class="after a3 abs" style="right:128px;top:991px;display:flex;align-items:center;gap:22px;font-size:24px;color:var(--tx-3)">Meta Business Partner<span style="width:1.5px;height:30px;background:rgba(254,254,254,.25)"></span><img src="assets/img/corfo-blanco.png" alt="CORFO" style="height:40px;width:auto;opacity:.9"></p>
+  <label class="cliedit" for="cliIn">Clínica<input id="cliIn" type="text" autocomplete="off" spellcheck="false" placeholder="Escriba el nombre de la clínica y presione Enter"></label>
+</section>
+
+<!-- ===================== EL PUNTO CIEGO =====================
+     Lámina con un paso: la primera «→» no avanza; el punto ADDAM recorre el camino y arregla cada fuga. -->
+<section class="slide s-dark" id="sP" data-builds="1">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">El punto ciego</p>
+  <p class="hintb">→ para ver qué hace ADDAM</p>
+  <h2 class="title rv d1" style="top:176px;font-size:62px">Entre una cita y la siguiente, <span class="mute">el paciente queda solo.</span></h2>
+  <div class="jrn rv d2">
+    <svg class="amark" viewBox="0 0 95 95" aria-hidden="true"><path d="M40.3103 37.5385C32.7519 24.4026 37.2542 7.59604 50.3665 0L93.1667 74.3833C96.9459 80.9512 94.6947 89.3545 88.1386 93.1525C81.5824 96.9505 73.204 94.7051 69.4248 88.1371L40.3103 37.5385Z"/></svg>
+    <div class="jrn-line"><span class="jrn-fill" id="pFill"></span></div>
+    <span class="pdot" id="pDot"></span>
+    <div class="jrn-nodes">
+      <div class="jn"><span class="d0"></span><span class="n">{{J1}}</span><span class="t">{{J1T}}</span></div>
+      <div class="jn"><span class="d0"></span><span class="n">{{J2}}</span><span class="t">{{J2T}}</span></div>
+      <div class="jn"><span class="d0"></span><span class="n">{{J3}}</span><span class="t">{{J3T}}</span></div>
+      <div class="jn"><span class="d0"></span><span class="n">{{J4}}</span><span class="t">{{J4T}}</span></div>
+    </div>
+  </div>
+  <div class="leaks">
+    <div class="leak rv d3"><div class="face prob"><span class="k">Fuga 1</span><h3>La hora que nadie confirma</h3><p>{{L1}}</p></div>
+      <div class="face fix"><span class="k">Con ADDAM</span><h3>Confirma y reagenda</h3><p>Cada hora se confirma por WhatsApp. Si el paciente no puede, reagenda en la misma conversación.</p></div></div>
+    <div class="leak rv d4"><div class="face prob"><span class="k">Fuga 2</span><h3>{{L2H}}</h3><p>{{L2}}</p></div>
+      <div class="face fix"><span class="k">Con ADDAM</span><h3>{{F2H}}</h3><p>Resuelve dudas, ofrece alternativas y pasa a su equipo a quien quiere hablar con una persona.</p></div></div>
+    <div class="leak rv d5"><div class="face prob"><span class="k">Fuga 3</span><h3>{{L3H}}</h3><p>{{L3}}</p></div>
+      <div class="face fix"><span class="k">Con ADDAM</span><h3>Lo lleva a su control</h3><p>{{F3}}</p></div></div>
+    <div class="leak rv d6"><div class="face prob"><span class="k">Fuga 4</span><h3>{{L4H}}</h3><p>{{L4}}</p></div>
+      <div class="face fix"><span class="k">Con ADDAM</span><h3>Lo trae de vuelta</h3><p>{{F4}}</p></div></div>
+  </div>
+  <p class="punch rv d7"><span class="p1">Ninguno de estos pacientes reclama. <i>Simplemente no vuelve.</i></span><span class="p2">Con ADDAM, cada paciente tiene <i>quién lo acompañe hasta su próxima cita.</i></span></p>
+  <p class="num"></p>
+</section>
+
+
+<!-- ===================== 2 · QUÉ HACE ADDAM ===================== -->
+<section class="slide s-light" id="s2">
+  <img class="hlogo" src="assets/img/addam-negro.png" alt="Addam">
+  <p class="eyebrow rv">Qué hace ADDAM</p>
+  <h2 class="title rv d1" style="top:178px;font-size:65px">Cinco tareas, un solo agente, <span class="mute">en toda su clínica.</span></h2>
+  <div class="track"><i id="t2fill"></i></div>
+  <span class="adot" id="t2dot"></span>
+  <div id="t2nodes"></div>
+  <article class="card" style="left:128px"><span class="n">01</span><svg class="ck" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><h3>Conversa y<br>agenda</h3><p>Responde por WhatsApp a cualquier hora y agenda en su agenda real, con el profesional correcto.</p></article>
+  <article class="card" style="left:466px"><span class="n">02</span><svg class="ck" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><h3>Confirma</h3><p>Recordatorios que el paciente responde por chat. Si no puede venir, reagenda. Quien no responde, pasa a su equipo.</p></article>
+  <article class="card" style="left:804px"><span class="n">03</span><svg class="ck" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><h3>Retoma<br>presupuestos</h3><p>Sigue cada presupuesto que no se inició y resuelve dudas. Pasa a su equipo a quien quiere hablar con una persona.</p></article>
+  <article class="card" style="left:1142px"><span class="n">04</span><svg class="ck" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><h3>Recupera<br>pacientes</h3><p>Trae de vuelta a pacientes dormidos: controles pendientes y tratamientos a medias.</p></article>
+  <article class="card" style="left:1480px"><span class="n">05</span><svg class="ck" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><h3>Reporta</h3><p>Cada mes y por clínica: horas confirmadas, presupuestos retomados y pacientes que volvieron.</p></article>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 3 · CORTE: LOS RESULTADOS ===================== -->
+<section class="slide" id="s3">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <svg class="iso" viewBox="0 0 95 95" aria-hidden="true">
+    <defs><radialGradient id="g3c" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#0E1A45"/><stop offset="1" stop-color="#0A1330"/></radialGradient></defs>
+    <path class="ib" fill="#282828" d="M40.3103 37.5385C32.7519 24.4026 37.2542 7.59604 50.3665 0L93.1667 74.3833C96.9459 80.9512 94.6947 89.3545 88.1386 93.1525C81.5824 96.9505 73.204 94.7051 69.4248 88.1371L40.3103 37.5385Z"/>
+    <circle class="ic2" cx="18.55" cy="76.31" r="18.55" fill="url(#g3c)"/>
+  </svg>
+  <p class="eyebrow rv">Lo que dicen los datos</p>
+  <h2 class="ttl rv d1">Los resultados con ADDAM.</h2>
+  <span class="ubar"></span>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 4 · PILAR 01 ===================== -->
+<section class="slide s-dark" id="s4">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Pilar 01 · Confirma y reagenda</p>
+  <h2 class="title rv d1" style="top:176px;font-size:56px">Menos sillas vacías.</h2>
+  <p class="desc rv d2" style="top:352px;width:600px">Confirmar es solo el comienzo. ADDAM también recupera la hora del que anula y del que no llega.</p>
+  <div class="bigcard rv d3" style="left:128px;top:560px;width:581px;height:360px">
+    <span class="bv" data-count="59" data-suffix="%">59%</span><span class="bl"></span>
+    <p class="bt">de los pacientes que anulan vuelven a tomar hora en la misma conversación con <img class="inlogo" src="assets/img/addam-blanco.png" alt="Addam"></p>
+  </div>
+  <div class="panel rv d2" style="left:773px;top:128px;width:1019px;height:792px"></div>
+  <p class="blab b rv d3" style="left:816px;top:170px">Lo que ya sabemos</p>
+  <p class="rowt rv d3" style="left:816px;top:206px">Confirmar funciona: quien confirma falta la mitad</p>
+  <span class="blab b" style="left:816px;top:289px">Confirmó</span>
+  <span class="bar b" style="left:1066px;top:270px;width:260px"></span><span class="bval" style="left:1347px;top:280px" data-count="8" data-suffix="%">8%</span>
+  <span class="blab g" style="left:816px;top:355px">No respondió</span>
+  <span class="bar g t2" style="left:1066px;top:336px;width:520px"></span><span class="bval" style="left:1606px;top:346px" data-count="16" data-suffix="%">16%</span>
+  <span class="sep" style="left:816px;top:424px;width:933px"></span>
+  <p class="blab b rv d4" style="left:816px;top:448px">La pregunta</p>
+  <p class="rowt rv d4" style="left:816px;top:482px">¿Qué pasa con el que anula? ¿Y con el que no llega?</p>
+  <div class="cal rv d5" style="left:816px"><span class="ctag">SI ANULA</span><span class="cok"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+    <p class="cact">ADDAM le ofrece otra hora en la misma conversación.</p>
+    <span class="cnum" data-count="59" data-suffix="%">59%</span>
+    <p class="clab">de los que anulan vuelve a tomar hora</p>
+    <div class="dots" id="dots4a" data-b="59"></div></div>
+  <div class="cal rv d6" style="left:1293px"><span class="ctag">SI NO LLEGA</span><span class="cok"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+    <p class="cact">ADDAM lo contacta para reagendar la hora que perdió.</p>
+    <span class="cnum" data-count="42" data-suffix="%">42%</span>
+    <p class="clab">de los que no llegaron vuelve a ser paciente</p>
+    <div class="dots" id="dots4b" data-b="42"></div></div>
+  <p class="src">Fuente: base de clientes ADDAM, 80+ clínicas. Clientes anonimizados.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 5 · PILAR 02 ===================== -->
+<section class="slide s-dark" id="s5">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Pilar 02 · Recaptura</p>
+  <h2 class="title rv d1" style="top:176px;font-size:56px">Pacientes dormidos que<br>vuelven.</h2>
+  <p class="desc rv d2" style="top:352px;width:600px">{{S5_DESC}}</p>
+  <div class="bigcard rv d3" style="left:128px;top:560px;width:581px;height:360px">
+    <span class="bv" data-count="127" data-prefix="+" data-suffix="%">+127%</span><span class="bl"></span>
+    <p class="bt">más pacientes dormidos vuelven a pagar en 60 días con una campaña de recaptura: 25% contra 11%</p>
+  </div>
+  <div class="panel rv d2" style="left:773px;top:128px;width:1019px;height:792px"></div>
+  <span class="blab g" style="left:816px;top:305px">Sin ADDAM</span>
+  <span class="bar g" style="left:1066px;top:286px;width:230px"></span><span class="bval" style="left:1314px;top:296px" data-count="11" data-suffix="%">11%</span>
+  <span class="blab b" style="left:816px;top:379px">Con ADDAM</span>
+  <span class="bar b t2" style="left:1066px;top:360px;width:520px"></span><span class="bval" style="left:1606px;top:370px" data-count="25" data-suffix="%">25%</span>
+  <span class="sep" style="left:816px;top:443px;width:933px"></span>
+  <p class="rowt rv d4" style="left:816px;top:480px">De cada 100 dormidos contactados</p>
+  <span class="pill rv d4" style="left:1566px;top:470px">25 vuelven</span>
+  <div class="dots" id="dots5" style="left:816px;top:550px" data-l="11" data-b="14"></div>
+  <div class="legend rv d5" style="left:816px;top:764px"><span><i style="background:var(--blue-soft)"></i>Sin ADDAM · 11</span><span><i style="background:var(--blue)"></i>Con ADDAM · +14</span><span class="g"><i style="background:#2B2B2B"></i>Siguen dormidos</span></div>
+  <p class="src">{{S5_SRC}}</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 6 · PILAR 03 ===================== -->
+<section class="slide s-dark" id="s6">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Pilar 03 · Mide campañas</p>
+  <h2 class="title rv d1" style="top:176px;font-size:56px">Cada peso de<br>publicidad, medido.</h2>
+  <p class="desc rv d2" style="top:352px;width:600px">Cada contacto que llega desde un anuncio se sigue hasta que agenda, asiste y paga. Si una campaña no paga, también se ve.</p>
+  <div class="bigcard rv d3" style="left:128px;top:560px;width:581px;height:360px">
+    <span class="bv" data-count="19.3" data-dec="1" data-suffix="×">19,3×</span><span class="bl"></span>
+    <p class="bt">volvió lo invertido en publicidad en {{S6_CLINICA}}</p>
+  </div>
+  <div class="panel rv d2" style="left:773px;top:128px;width:1019px;height:792px"></div>
+  <div class="kpi6 rv d3" style="left:816px"><p class="kl">Invertido en Meta</p><p class="kv" data-count="799317" data-prefix="$">$799.317</p></div>
+  <div class="kpi6 rv d3" style="left:1049px"><p class="kl">Ingreso generado</p><p class="kv" data-count="15.4" data-dec="1" data-prefix="$" data-suffix=" M">$15,4 M</p><p class="ks">Anuncio $3,3 M<br>Formulario web $12,1 M</p></div>
+  <div class="kpi6 rv d4" style="left:1282px"><p class="kl">Pacientes que pagaron</p><p class="kv" data-count="93">93</p><p class="ks">39% de los que agendaron</p></div>
+  <div class="kpi6 rv d4" style="left:1515px"><p class="kl">Costo por paciente</p><p class="kv" data-count="8595" data-prefix="$">$8.595</p></div>
+  <span class="sep" style="left:816px;top:298px;width:933px"></span>
+  <p class="rowt rv d4" style="left:816px;top:310px;font-size:26px">Del anuncio al pago</p>
+  <p class="rv d4 abs" style="left:1100px;top:316px;font-size:17px;color:var(--tx-3)">porcentaje sobre los que contactaron</p>
+  <div class="fun6 rv d5"><span class="fdiv" style="left:1002.6px"></span><span class="fdiv" style="left:1189.2px"></span><span class="fdiv" style="left:1375.8px"></span><span class="fdiv" style="left:1562.4px"></span><span class="fnum" style="left:828.0px" data-count="1781">1.781</span><span class="fnum" style="left:1014.6px" data-count="311">311</span><span class="fnum" style="left:1201.2px" data-count="237">237</span><span class="fnum" style="left:1387.8px" data-count="133">133</span><span class="fnum" style="left:1574.4px" data-count="93">93</span>
+    <svg class="farea" viewBox="0 0 933 150" preserveAspectRatio="none" style="left:816px;width:933px;height:150px"><defs><linearGradient id="g6" x1="0" x2="1"><stop offset="0" stop-color="#2E66FF"/><stop offset="1" stop-color="#5C86FF" stop-opacity=".75"/></linearGradient></defs><path d="M0 0 L933 0 L933 7.8 L746.4 7.8 C686.7 7.8 686.7 11.2 630.7 11.2 L559.8 11.2 C500.1 11.2 500.1 20.0 444.1 20.0 L373.2 20.0 C313.5 20.0 313.5 26.2 257.5 26.2 L186.6 26.2 C126.9 26.2 126.9 150.0 70.9 150.0 L0 150.0 Z" fill="url(#g6)"/></svg>
+    <span class="fpill" style="left:1095.9px">17%</span><span class="fpill" style="left:1282.5px">13%</span><span class="fpill" style="left:1469.1px">7%</span><span class="fpill" style="left:1655.7px">5%</span><span class="flab6" style="left:828.0px">Contactaron</span><span class="flab6" style="left:1014.6px">Pacientes</span><span class="flab6" style="left:1201.2px">Agendaron</span><span class="flab6" style="left:1387.8px">Asistieron</span><span class="flab6" style="left:1574.4px">Pagaron</span></div>
+  <span class="sep" style="left:816px;top:620px;width:933px"></span>
+  <svg class="donut" viewBox="0 0 200 200" style="left:826px;top:646px"><circle class="dseg" cx="100" cy="100" r="78" stroke="#22A35A" data-len="272.03" style="stroke-dasharray:0 490.09;stroke-dashoffset:0.00"/><circle class="dseg" cx="100" cy="100" r="78" stroke="#F5A524" data-len="77.65" style="stroke-dasharray:0 490.09;stroke-dashoffset:-275.03"/><circle class="dseg" cx="100" cy="100" r="78" stroke="#D2353B" data-len="61.10" style="stroke-dasharray:0 490.09;stroke-dashoffset:-355.68"/><circle class="dseg" cx="100" cy="100" r="78" stroke="#5C5C5C" data-len="67.31" style="stroke-dasharray:0 490.09;stroke-dashoffset:-419.78"/></svg>
+  <p class="dcen" style="left:826px;top:712px"><b data-count="237">237</b><span>agendaron</span></p>
+  <p class="rowt rv d6" style="left:1066px;top:640px;font-size:24px">Lo que pasó con los que agendaron</p>
+  <div class="legend6 rv d6"><div class="lrow"><i style="background:#22A35A"></i><span class="lt">Asistieron</span><b>133</b><em>56%</em></div><div class="lrow"><i style="background:#F5A524"></i><span class="lt">Esperando su cita</span><b>39</b><em>16%</em></div><div class="lrow"><i style="background:#D2353B"></i><span class="lt">Se cayeron<small>Canceló o no asistió</small></span><b>31</b><em>13%</em></div><div class="lrow"><i style="background:#5C5C5C"></i><span class="lt">Sin desenlace registrado</span><b>34</b><em>14%</em></div></div>
+  <p class="src">Fuente: panel de Publicidad de ADDAM, {{S6_CLINICA}}, 1 sep a 16 oct 2026 (cifras en curso). Cliente anonimizado.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== PILAR 04 · RESPONDE 24/7 =====================
+     Recepción típica: lunes a viernes 9 a 19 y sábado 9 a 14 (55 de 168 horas). 56% y tiempos medidos en la base de
+     ADDAM (17 clínicas, últimos 30 días, corte 15-oct-2026). -->
+<section class="slide s-dark" id="s24">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Pilar 04 · Responde 24/7</p>
+  <h2 class="title rv d1" style="top:176px;font-size:56px">Abierto las 168 horas.</h2>
+  <p class="desc rv d2" style="top:352px;width:600px">Una recepción típica atiende de lunes a viernes de 9:00 a 19:00 y el sábado hasta las 14:00. ADDAM conversa las otras 113 horas y le deja a su equipo lo que necesita una persona.</p>
+  <div class="bigcard rv d3" style="left:128px;top:560px;width:581px;height:360px">
+    <span class="bv" data-count="56" data-suffix="%">56%</span><span class="bl"></span>
+    <p class="bt">de los pacientes escribe cuando la clínica está cerrada</p>
+  </div>
+  <div class="panel rv d2" style="left:773px;top:128px;width:1019px;height:792px"></div>
+  <p class="rowt rv d3" style="left:816px;top:200px">Una recepción típica atiende 55 de las 168 horas</p>
+  <span class="pill rv d3" style="right:171px;top:189px"><span>+<span id="hrs24">113</span> h con ADDAM</span></span>
+  <div class="wk rv d3" id="wk24"></div>
+  <div class="legend rv d4" style="left:816px;top:572px;font-size:22px"><span class="g"><i style="background:rgba(254,254,254,.82);border-radius:5px"></i>Recepción</span><span><i style="background:var(--blue);border-radius:5px"></i>Las 113 horas que cubre ADDAM</span></div>
+  <span class="sep" style="left:816px;top:628px;width:933px"></span>
+  <p class="rowt rv d4" style="left:816px;top:654px">Tiempo de respuesta con la clínica abierta</p>
+  <span class="pill rv d4" style="right:171px;top:643px">14 s vs 2,3 min</span>
+  <span class="blab b" style="left:816px;top:739px">ADDAM</span>
+  <span class="bar b" style="left:1066px;top:720px;width:53px"></span><span class="bval" style="left:1139px;top:730px">14 s</span>
+  <span class="blab g" style="left:816px;top:813px">Su equipo</span>
+  <span class="bar g t2" style="left:1066px;top:794px;width:520px"></span><span class="bval" style="left:1606px;top:804px">2,3 min</span>
+  <p class="cap rv d5" style="top:868px">De noche, el 10% más lento espera 13 horas si responde el equipo. El agente, 14 segundos.</p>
+  <p class="src">Fuente: base de clientes ADDAM, 17 clínicas, últimos 30 días. Clientes anonimizados.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 7 · CASO CUPONES ===================== -->
+<section class="slide s-dark" id="s7">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv" style="display:flex;align-items:center;gap:18px">Caso real · Campañas con cupones<span style="width:1.5px;height:30px;background:rgba(143,168,255,.4)"></span><img src="assets/img/oto-blanco.png" alt="OTO" style="height:34px;width:auto"></p>
+  <p class="desc rv d1" style="top:186px;width:720px;font-size:28px;line-height:1.42;color:#C9C9C9">Un cliente de ADDAM capta leads con cupones. ADDAM los contacta, los conversa y los lleva a una hora agendada.</p>
+  <div class="steps" id="steps7">
+    <div class="st rv d2" style="top:360px"><span class="ic" style="left:0;top:0;width:84px;height:84px"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span class="k" style="top:-6px">PASO 1</span><span class="h" style="top:26px">Llega el lead del cupón</span><span class="p" style="top:70px">Desde la campaña de cupones, directo a ADDAM.</span></div>
+    <span class="dash d3" style="top:452px;height:34px"></span>
+    <div class="st rv d4" style="top:530px"><span class="ic" style="left:0;top:0;width:84px;height:84px"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+      <span class="k" style="top:-6px">PASO 2</span><span class="h" style="top:26px">ADDAM le escribe en segundos</span><span class="p" style="top:70px">Por WhatsApp, conversa y resuelve dudas.</span></div>
+    <span class="dash d5" style="top:622px;height:34px"></span>
+    <div class="st rv d6" style="top:713px"><span class="ic" style="left:0;top:0;width:84px;height:84px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <span class="k" style="top:-6px">PASO 3</span><span class="h" style="top:26px">Queda agendado</span><span class="p" style="top:70px">En la agenda del cliente, con recordatorio.</span></div>
+  </div>
+  <div class="hero rv d2"><span class="k">INVERSIÓN</span><span class="v" data-count="25" data-prefix="×">×25</span><span class="t">rendimiento de ADDAM en esta campaña</span></div>
+  <div class="sm rv d4" style="left:900px"><span class="k">AGENDAS REALIZADAS</span><span class="v" data-count="7" data-prefix="+" data-suffix=" pts">+7 pts</span><span class="t">puntos porcentuales</span></div>
+  <div class="sm rv d5" style="left:1205px"><span class="k">TASA DE ASISTENCIA</span><span class="v" data-count="19" data-prefix="+" data-suffix=" pts">+19 pts</span><span class="t">puntos porcentuales</span></div>
+  <div class="sm hi rv d6" style="left:1511px"><span class="k">CON CUPÓN ESCANEADO</span><span class="v" data-count="80" data-prefix="&gt;" data-suffix="%">&gt;80%</span><span class="t">de asistencia si el cupón se escanea en la venta</span></div>
+  <p class="rv d7 abs" style="left:900px;top:786px;font-size:24px;color:var(--tx-3)">Cliente de ADDAM. Nombre reservado.</p>
+  <p class="src">Fuente: base de ADDAM. Cliente anonimizado.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 9 · AGENTE QUE RAZONA ===================== -->
+<!-- Mismo mensaje del paciente a los dos lados: el bot de menús no lo entiende; ADDAM lo reconoce y lo agenda. -->
+<section class="slide s-light" id="s8">
+  <img class="hlogo" src="assets/img/addam-negro.png" alt="Addam">
+  <p class="eyebrow rv">Fácil de usar</p>
+  <h2 class="title rv d1" style="top:178px;font-size:64px">Un agente que razona, no un bot de menús.</h2>
+  <p class="side bot rv d2"><i></i>UN BOT DE MENÚS</p>
+  <p class="side ad rv d2"><svg viewBox="0 0 95 95"><path d="M37.1093 76.3095C37.1093 86.5572 28.8021 94.8646 18.5546 94.8646C8.3072 94.8646 0 86.5572 0 76.3095C0 66.0618 8.3072 57.7544 18.5546 57.7544C28.8021 57.7544 37.1093 66.0618 37.1093 76.3095Z" fill="#0243FF"/><path d="M40.3103 37.5385C32.7519 24.4026 37.2542 7.59604 50.3665 0L93.1667 74.3833C96.9459 80.9512 94.6947 89.3545 88.1386 93.1525C81.5824 96.9505 73.204 94.7051 69.4248 88.1371L40.3103 37.5385Z" fill="#0C0C0C"/></svg>CON ADDAM</p>
+  <div class="pane bot rv d2" style="left:128px"><div class="conv" id="cvBot"></div></div>
+  <div class="pane ad rv d2" style="left:982px"><div class="conv" id="cvAd"></div></div>
+  <span class="qline rv d3"></span>
+  <div class="q rv d3" style="left:128px"><span class="ic"><svg viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
+    <h4>Entiende y razona</h4><p>Lee lo que el paciente escribe, como lo escriba, y resuelve varias cosas en un mensaje.</p></div>
+  <div class="q rv d4" style="left:690px"><span class="ic"><svg viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg></span>
+    <h4>Intuitivo para su equipo</h4><p>Una sola bandeja con cada conversación ordenada. Sin capacitación técnica.</p></div>
+  <div class="q rv d5" style="left:1252px"><span class="ic"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+    <h4>Sabe cuándo pasar a una persona</h4><p>Lo urgente o complejo llega a su equipo, con el contexto completo.</p></div>
+  <p class="src">Conversación de ejemplo con un paciente ficticio.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 9 · FÁCIL DE SUMAR ===================== -->
+<section class="slide s-dark" id="s9">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Fácil de sumar</p>
+  <h2 class="title rv d1" style="top:178px;font-size:60.5px">Funciona sobre lo que ya tienen. <span class="mute">Nada que migrar.</span></h2>
+  <span class="tagx rv d2">ADDAM EJECUTA</span>
+  <svg class="wires" viewBox="0 0 1920 1080" aria-hidden="true">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#2E66FF"/></marker></defs>
+    <path class="wire" d="M410 519 L 848 519" marker-end="url(#ah)"/>
+    <path class="wire" d="M1068 489 L 1370 450" marker-end="url(#ah)"/>
+    <path class="wire" d="M1068 549 L 1370 608" marker-end="url(#ah)"/>
+    <path class="pulse" d="M410 519 L 848 519"/>
+    <path class="pulse p2" d="M1068 489 L 1370 450"/>
+    <path class="pulse p3" d="M1068 549 L 1370 608"/>
+  </svg>
+  <div class="circ navy rv d2" style="left:262px;top:451px;width:136px;height:136px"><span style="display:flex;gap:6px"><img src="assets/img/waba-white.svg" alt="" style="width:30px"><img src="assets/img/ig-white.svg" alt="" style="width:30px"><img src="assets/img/face-white.svg" alt="" style="width:30px"></span></div>
+  <p class="lbl rv d3" style="left:190px;top:620px;width:320px">Sus pacientes</p>
+  <p class="lsub rv d3" style="left:150px;top:663px;width:400px">WhatsApp, Instagram y Facebook</p>
+  <div class="circ navy rv d3" style="left:862px;top:421px;width:196px;height:196px;box-shadow:0 0 70px rgba(2,67,255,.6)"><svg viewBox="0 0 95 95" style="width:96px;height:96px"><path d="M37.1093 76.3095C37.1093 86.5572 28.8021 94.8646 18.5546 94.8646C8.3072 94.8646 0 86.5572 0 76.3095C0 66.0618 8.3072 57.7544 18.5546 57.7544C28.8021 57.7544 37.1093 66.0618 37.1093 76.3095Z" fill="#0243FF"/><path d="M40.3103 37.5385C32.7519 24.4026 37.2542 7.59604 50.3665 0L93.1667 74.3833C96.9459 80.9512 94.6947 89.3545 88.1386 93.1525C81.5824 96.9505 73.204 94.7051 69.4248 88.1371L40.3103 37.5385Z" fill="#FEFEFE"/></svg></div>
+  <p class="lbl rv d4" style="left:760px;top:642px;width:400px">Agente ADDAM</p>
+  <p class="lsub rv d4" style="left:710px;top:685px;width:500px">conversa, agenda, confirma y retoma</p>
+  <div class="circ rv d5" style="left:1381px;top:400px;width:100px;height:100px;background:#FEFEFE"><svg viewBox="0 0 24 24" style="width:42px;height:42px;stroke:#0243FF;fill:none;stroke-width:1.7"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></div>
+  <p class="rl rv d5" style="left:1505px;top:418px">Su agenda clínica</p>
+  <p class="rs rv d5" style="left:1505px;top:462px;width:280px">agenda, confirma y reagenda</p>
+  <div class="circ navy rv d6" style="left:1381px;top:560px;width:100px;height:100px"><svg viewBox="0 0 24 24" style="width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+  <p class="rl rv d6" style="left:1505px;top:578px">Su equipo</p>
+  <p class="rs rv d6" style="left:1505px;top:622px;width:300px">recibe los casos para una persona</p>
+  <span class="sep rv d6" style="left:128px;top:761px;width:1664px"></span>
+  <div class="circ navy rv d7" style="left:128px;top:820px;width:100px;height:100px"><svg viewBox="0 0 24 24" style="width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round"><path d="M3 21h18"/><rect x="5" y="11" width="3" height="7" rx="1.5"/><rect x="10.5" y="5" width="3" height="13" rx="1.5"/><rect x="16" y="9" width="3" height="9" rx="1.5"/></svg></div>
+  <p class="rv d7 abs" style="left:248px;top:799px;font-size:23px;letter-spacing:.14em;font-weight:700;color:var(--blue-soft)">ADDAM MIDE</p>
+  <p class="rv d7 abs" style="left:248px;top:836px;font-size:30px;line-height:1.38;font-weight:700">Sus campañas en<br>Meta</p>
+  <p class="rv d7 abs" style="left:248px;top:921px;font-size:24px;color:var(--tx-2)">su clínica o su agencia</p>
+  <div class="chain rv d8" id="chain9">
+    <span class="chip" style="left:0">Anuncio</span><span class="dotl" style="left:126px;width:140px"></span>
+    <span class="chip" style="left:270px">Conversación</span><span class="dotl" style="left:460px;width:140px"></span>
+    <span class="chip" style="left:603px">Cita</span><span class="dotl" style="left:682px;width:140px"></span>
+    <span class="chip" style="left:826px">Asistencia</span><span class="dotl" style="left:978px;width:140px"></span>
+    <span class="chip" style="left:1122px">Pago</span>
+  </div>
+  <p class="rv d8 abs" style="left:585px;top:893px;font-size:24px;color:var(--tx-2)"><b style="color:#DBDBDB">ADDAM sigue cada contacto hasta el pago,</b> sin tocar la campaña.</p>
+  <p class="num"></p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ===================== 14 · DATOS Y RESPALDO ===================== -->
+<section class="slide s-dark" id="s14">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Datos y respaldo</p>
+  <h2 class="title rv d1" style="top:178px;font-size:64.5px">Los datos de sus pacientes son de su clínica.</h2>
+  <div class="dc rv d2" style="left:128px;top:296px"><span class="ic"><svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><path d="M12 15v2"/></svg></span>
+    <h4 style="top:42px">Usted decide</h4><p style="top:90px">Ley 21.719, que rige desde el 1 de diciembre de 2026: su clínica es responsable y ADDAM encargado, por contrato.</p></div>
+  <div class="dc rv d3" style="left:972px;top:296px"><span class="ic"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></span>
+    <h4 style="top:60px">Sin entrenar modelos</h4><p style="top:108px">Las conversaciones de sus pacientes no se usan para entrenar modelos de IA.</p></div>
+  <div class="dc rv d4" style="left:128px;top:556px"><span class="ic"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+    <h4 style="top:60px">Se presenta como asistente</h4><p style="top:108px">No diagnostica ni da indicaciones clínicas. Ante una urgencia, deriva de inmediato.</p></div>
+  <div class="dc rv d5" style="left:972px;top:556px"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span>
+    <h4 style="top:60px">Respeta a quien no quiere mensajes</h4><p style="top:108px">Los pacientes que piden no ser contactados quedan fuera de toda campaña.</p></div>
+  <div class="bbar"><b>Meta Business Partner</b><span style="left:573px">Customer Success dedicado</span><span style="right:40px">Integra Dentalink, Medilink y DentalSoft</span></div>
+  <p class="src">Términos y Condiciones de Servicio de ADDAM, Anexo de Tratamiento de Datos.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== 10 · CORTE ===================== -->
+<section class="slide s-dark" id="s10" data-chrome="none">
+  <div class="cobrand" style="top:222px">
+    <video class="logo-anim" id="logo10" src="assets/video/logo-intro-dark.mp4" muted playsinline preload="auto" aria-label="ADDAM" style="width:590px;height:131px;margin:0 -118px"></video>
+    <span class="x cli-only">×</span>
+    <span class="cname cli-only" style="font-size:72px"></span>
+  </div>
+  <h2 class="ctitle after a2" style="top:414px;font-size:114px">Cada conversación es una<br><span>oportunidad.</span></h2>
+</section>
+
+<!-- ===================== CALCULADORA CON DATOS MEDIDOS =====================
+     Tasas medidas en la base de ADDAM: 1 de cada 4 que anula llega a otra hora y paga (462 de 1.854);
+     42% de los que no llegan vuelve a ser paciente; +14 puntos de dormidos que vuelven en 60 días con campaña. -->
+<section class="slide s-dark" id="sC">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Con sus números</p>
+  <h2 class="title rv d1" style="top:178px;font-size:64px">¿Cuánto es eso en su clínica?</h2>
+  <div class="cpanel rv d2"></div>
+  <div class="fld rv d2" style="top:330px"><div class="row"><label for="cCit">Citas al mes</label><output id="oCit"></output></div><input type="range" id="cCit" min="100" max="6000" step="50" value="{{CALC_CITAS}}"><p class="hint">Ejemplo: ponga el suyo</p></div>
+  <div class="fld rv d2" style="top:444px"><div class="row"><label for="cTic">Valor promedio de una atención</label><output id="oTic"></output></div><input type="range" id="cTic" min="10000" max="300000" step="5000" value="{{CALC_TICKET}}"><p class="hint">Ejemplo: ponga el suyo</p></div>
+  <div class="fld rv d3" style="top:558px"><div class="row"><label for="cAnu">Pacientes que anulan su hora</label><output id="oAnu"></output></div><input type="range" id="cAnu" min="1" max="30" step="1" value="10"><p class="hint">Con ADDAM, 1 de cada 4 llega a otra hora y paga</p></div>
+  <div class="fld rv d3" style="top:672px"><div class="row"><label for="cNoL">Pacientes que no llegan</label><output id="oNoL"></output></div><input type="range" id="cNoL" min="1" max="30" step="1" value="8"><p class="hint">Con ADDAM, 42% vuelve a ser paciente</p></div>
+  <div class="fld rv d4" style="top:786px"><div class="row"><label for="cDor">Pacientes sin visita hace más de 6 meses</label><output id="oDor"></output></div><input type="range" id="cDor" min="100" max="20000" step="100" value="1500"><p class="hint">Con ADDAM, 14 de cada 100 más vuelven en 60 días</p></div>
+  <div class="res r1 rv d3"><span class="k">AL MES</span><span class="v" id="rMes">$0</span><p class="t"><b id="pMes">0</b> pacientes que anulan o no llegan vuelven a atenderse.</p></div>
+  <div class="res r2 rv d4"><span class="k">POR CADA CAMPAÑA DE RECAPTURA</span><span class="v" id="rCam">$0</span><p class="t"><b id="pCam">0</b> pacientes dormidos vuelven a pagar en 60 días.</p></div>
+  <p class="cnote">Calculado con lo que ADDAM mide en sus clientes. Es una estimación para conversar, no una promesa: cada clínica es distinta.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== CÓMO COBRAMOS ===================== -->
+<section class="slide s-light" id="sPr">
+  <img class="hlogo" src="assets/img/addam-negro.png" alt="Addam">
+  <p class="eyebrow rv">Cómo cobramos</p>
+  <h2 class="title rv d1" style="top:178px;font-size:64px">Por paciente al mes. <span class="mute">No por conversación.</span></h2>
+  <div class="pc2 old rv d2"><p class="k">Lo habitual en el mercado</p><h3>Cobro por cada conversación de 24 horas</h3>
+    <ul><li>Cada vez que el paciente vuelve a escribir, se cobra de nuevo.</li><li>Más mensajes, más costo: el incentivo es conversar más, no resolver.</li><li>La cuenta depende de cuánto escriben sus pacientes, no de cuántos atiende.</li></ul></div>
+  <div class="pc2 new rv d3"><p class="k">ADDAM</p><h3>Un precio por paciente atendido al mes</h3>
+    <ul><li><b>Escriba una o veinte veces,</b> es un solo paciente.</li><li><b>Incluye</b> el agente 24/7 en WhatsApp, confirmaciones, campañas y reportes.</li><li><b>Tramos por volumen:</b> a más pacientes, menor precio por paciente.</li><li><b>Sin permanencia.</b></li></ul></div>
+  <p class="pfoot rv d4">No incluye la inversión en Meta ni los cargos de WhatsApp que cobra Meta.</p>
+  <a class="pbtn rv d4" href="calc.html" target="_blank" rel="noopener">Ver planes y precios →</a>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== CÓMO PARTIMOS ===================== -->
+<section class="slide s-dark" id="s12">
+  <img class="hlogo" src="assets/img/addam-blanco.png" alt="Addam">
+  <p class="eyebrow rv">Cómo partimos</p>
+  <h2 class="title rv d1" style="top:178px;font-size:64px">En marcha sin cambiar lo que ya usa.</h2>
+  <div class="pbar"><b>EN MARCHA</b><span>Su mismo software clínico y su mismo número de WhatsApp</span></div>
+  <span class="cn" style="left:524px"></span><span class="cn" style="left:946px"></span><span class="cn" style="left:1368px"></span>
+  <div class="pc rv d3" style="left:128px"><span class="ic"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><span class="bn">01</span>
+    <h4>Conectamos</h4><p>Su software clínico y su WhatsApp Business.</p></div>
+  <div class="pc rv d4" style="left:550px"><span class="ic"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span><span class="bn">02</span>
+    <h4>Configuramos</h4><p>El agente con sus servicios, precios, horarios y profesionales.</p></div>
+  <div class="pc rv d5" style="left:972px"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/><path d="M6 12h16"/></svg></span><span class="bn">03</span>
+    <h4>Encendemos</h4><p>Confirmaciones, recaptura y medición de campañas.</p></div>
+  <div class="pc rv d6" style="left:1395px"><span class="ic"><svg viewBox="0 0 24 24" style="stroke-linecap:round"><path d="M3 21h18"/><rect x="5" y="11" width="3" height="7" rx="1.5"/><rect x="10.5" y="5" width="3" height="13" rx="1.5"/><rect x="16" y="9" width="3" height="9" rx="1.5"/></svg></span><span class="bn">04</span>
+    <h4>Medimos</h4><p>Cada mes le mostramos cuántos pacientes volvieron y cuánto ingresó.</p></div>
+  <p class="foot rv d7">Para partir: acceso a su software clínico y a su WhatsApp.</p>
+  <p class="num"></p>
+</section>
+
+<!-- ===================== CIERRE ===================== -->
+<section class="slide s-dark" id="s15" data-chrome="none">
+  <div class="cobrand" style="top:200px">
+    <video class="logo-anim" id="logo15" src="assets/video/logo-intro-dark.mp4" muted playsinline preload="auto" aria-label="ADDAM" style="width:685px;height:152px;margin:0 -137px"></video>
+    <span class="x cli-only">×</span>
+    <span class="cname cli-only"></span>
+  </div>
+  <h2 class="ctitle after a2" style="top:400px;font-size:150px">¿Partimos?</h2>
+  <p class="after a3 abs" style="left:0;right:0;top:590px;text-align:center;font-size:32px;color:var(--tx-2)">Más de 80 clínicas ya trabajan con ADDAM.</p>
+  <div class="ctas after a3"><a class="cta pri" id="ctaAgenda" href="#" target="_blank" rel="noopener">Agendar una reunión →</a><a class="cta" id="ctaWa" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a></div>
+  <p class="after a3 abs" style="right:128px;top:991px;display:flex;align-items:center;gap:22px;font-size:24px;color:var(--tx-3)">Meta Business Partner<span style="width:1.5px;height:30px;background:rgba(254,254,254,.25)"></span><img src="assets/img/corfo-blanco.png" alt="CORFO" style="height:40px;width:auto;opacity:.9"></p>
+</section>
+
+<div id="progress"></div>
+<div id="navb"><a href="calc.html" target="_blank" rel="noopener">Precios</a><button id="prev" type="button" aria-label="Lámina anterior">‹</button><button id="next" type="button" aria-label="Lámina siguiente">›</button></div>
+</div>
+
+<script>
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=(q,r=document)=>r.querySelector(q), $$=(q,r=document)=>[...r.querySelectorAll(q)];
+const TIMERS={};
+function later(id,fn,ms){(TIMERS[id] ||= []).push(setTimeout(fn,ms));}
+function clearLater(id){(TIMERS[id]||[]).forEach(clearTimeout);TIMERS[id]=[];}
+function ping(el){el.classList.remove('ping');void el.offsetWidth;el.classList.add('ping');}
+const ISO='<svg viewBox="0 0 95 95"><path d="M37.1093 76.3095C37.1093 86.5572 28.8021 94.8646 18.5546 94.8646C8.3072 94.8646 0 86.5572 0 76.3095C0 66.0618 8.3072 57.7544 18.5546 57.7544C28.8021 57.7544 37.1093 66.0618 37.1093 76.3095Z" fill="#0B2FC8"/><path d="M40.3103 37.5385C32.7519 24.4026 37.2542 7.59604 50.3665 0L93.1667 74.3833C96.9459 80.9512 94.6947 89.3545 88.1386 93.1525C81.5824 96.9505 73.204 94.7051 69.4248 88.1371L40.3103 37.5385Z" fill="#FEFEFE"/></svg>';
+
+/* ---------- conteos ---------- */
+function fmt(v,dec){return v.toLocaleString('es-CL',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+function countTo(el,to,dur,dec,pre,suf){const t0=performance.now();
+  (function tick(now){const p=Math.max(0,Math.min((now-t0)/dur,1)),e=1-Math.pow(1-p,3);el.textContent=pre+fmt(to*e,dec)+suf;if(p<1)requestAnimationFrame(tick);})(t0);}
+function playCounts(s){
+  $$('[data-count]',s).forEach(el=>{const to=parseFloat(el.dataset.count),dec=+(el.dataset.dec||0),pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+    if(REDUCE){el.textContent=pre+fmt(to,dec)+suf;return;}
+    el.textContent=pre+fmt(0,dec)+suf; later(s.id,()=>countTo(el,to,1200,dec,pre,suf),450);});
+}
+
+/* ---------- logo animado (1, 10 y 15) ---------- */
+function playLogo(s){
+  const v=$('video.logo-anim',s); if(!v) return;
+  s.classList.remove('logo-done'); const done=()=>s.classList.add('logo-done');
+  if(REDUCE){try{v.currentTime=v.duration||4;}catch(e){} done();return;}
+  try{v.currentTime=0;}catch(e){}
+  const p=v.play(); if(p&&p.catch)p.catch(done);
+  later(s.id,done,2600);
+}
+
+/* ---------- 2 · el punto ADDAM recorre las cinco tareas ---------- */
+const N2=[284,622,960,1298,1636];
+(function(){const box=$('#t2nodes');N2.forEach(x=>{const n=document.createElement('span');n.className='node';n.style.left=(x-36)+'px';n.innerHTML=ISO;box.appendChild(n);});})();
+function play2(){
+  const nodes=$$('#s2 .node'),cards=$$('#s2 .card'),dot=$('#t2dot'),fill=$('#t2fill');
+  nodes.forEach(n=>n.classList.remove('on'));cards.forEach(c=>c.classList.remove('on'));fill.style.opacity='1';
+  dot.style.transition='none';fill.style.transition='none';dot.style.left='115px';dot.style.opacity='1';fill.style.width='0px';
+  void dot.offsetWidth;dot.style.transition='';fill.style.transition='';
+  if(REDUCE){nodes.forEach(n=>n.classList.add('on'));cards.forEach(c=>c.classList.add('on'));dot.style.opacity='0';fill.style.width='1664px';return;}
+  let t=800;
+  N2.forEach((x,i)=>{
+    later('s2',()=>{dot.style.left=(x-13)+'px';fill.style.width=(x-128)+'px';},t);
+    t+=700; later('s2',()=>{nodes[i].classList.add('on');cards[i].classList.add('on');ping(nodes[i]);},t); t+=300;
+  });
+  later('s2',()=>{fill.style.width='1664px';dot.style.opacity='0';},t+200);
+  later('s2',()=>{fill.style.opacity='0';},t+1100);   // termina como el PDF: línea celeste
+}
+
+/* ---------- 4 y 5 · grillas de 100 puntos ---------- */
+function buildDots(id){const g=$(id);g.innerHTML='';for(let i=0;i<100;i++)g.appendChild(document.createElement('i'));}
+buildDots('#dots4a');buildDots('#dots4b');buildDots('#dots5');
+function playDots(id,sid,off=900){
+  const g=$(id),ds=$$('i',g),l=+(g.dataset.l||0),b=+(g.dataset.b||0);
+  ds.forEach(d=>d.className='');
+  const cls=i=>i<l?'l':(i<l+b?'b':'');
+  if(REDUCE){ds.forEach((d,i)=>d.className=cls(i));return;}
+  ds.forEach((d,i)=>{const c=cls(i);if(c)later(sid,()=>d.className=c,off+i*22);});
+}
+
+/* ---------- 6 · embudo y anillo del panel de Publicidad ---------- */
+function play6(){
+  const pills=$$('#s6 .fpill'),segs=$$('#s6 .dseg');
+  pills.forEach(p=>p.classList.remove('on'));
+  const C=segs.length?2*Math.PI*78:0;
+  segs.forEach(g=>g.style.strokeDasharray=`0 ${C}`);
+  const fill=()=>segs.forEach(g=>g.style.strokeDasharray=`${g.dataset.len} ${C}`);
+  if(REDUCE){pills.forEach(p=>p.classList.add('on'));segs.forEach(g=>g.style.transition='none');fill();return;}
+  pills.forEach((p,i)=>later('s6',()=>p.classList.add('on'),1100+i*300));
+  segs.forEach((g,i)=>later('s6',()=>{g.style.strokeDasharray=`${g.dataset.len} ${C}`;},1500+i*350));
+}
+
+/* ---------- 9 · el mismo mensaje, dos resultados ---------- */
+const P1='hola tengo hora el jueves pero me salió algo, ¿hay más tarde o el viernes? y quiero {{CHAT_PIDE}}';
+const CHAT9=[
+  {t:600, side:'b', k:'pt', x:P1},
+  {t:600, side:'a', k:'pt', x:P1},
+  {t:1500,side:'b', k:'bot',x:'Opción no válida. Responda 1, 2 o 3.<small>1 Agendar · 2 Anular · 3 Otras consultas</small>'},
+  {t:1300,side:'a', k:'typing'},
+  {t:2700,side:'a', k:'ad', x:'¡Hola, Francisco! Te muevo tu hora del jueves con {{CHAT_PRO}}: tengo jueves 18:30, o viernes 10:00 o 16:00. ¿Sumo {{CHAT_COSA}} en la misma visita?'},
+  {t:3900,side:'b', k:'pt', x:'quiero cambiar mi hora del jueves'},
+  {t:3900,side:'a', k:'pt', x:'viernes 16:00, y sí a {{CHAT_COSA}}'},
+  {t:4600,side:'b', k:'bot',x:'Opción no válida. Responda 1, 2 o 3.'},
+  {t:4500,side:'a', k:'typing'},
+  {t:5600,side:'a', k:'ad', x:'Listo, Francisco ✓ El viernes a las 16:00 con {{CHAT_PRO}}, con {{CHAT_TU}}. Te recuerdo el día antes.'},
+  {t:6300,side:'b', k:'chip ko',x:'✕ Sin hora agendada'},
+  {t:6300,side:'a', k:'chip ok',x:'✓ Hora agendada en su agenda clínica'},
+];
+function play8(){
+  const box={b:$('#cvBot'),a:$('#cvAd')}; box.b.innerHTML=''; box.a.innerHTML='';
+  const add=(m,anim)=>{const c=box[m.side]; const ty=c.querySelector('.typing'); if(ty) ty.remove();
+    if(m.k==='typing'){const t=document.createElement('div');t.className='typing a';t.innerHTML='<i></i><i></i><i></i>';c.appendChild(t);return;}
+    const el=document.createElement('div'); el.className=(m.k.startsWith('chip')?m.k:'m '+m.k)+(anim?' pop':''); el.innerHTML=m.x; c.appendChild(el);};
+  if(REDUCE){CHAT9.filter(m=>m.k!=='typing').forEach(m=>add(m,false));return;}
+  CHAT9.forEach(m=>later('s8',()=>add(m,true),m.t));
+}
+
+/* ---------- 9 · la cadena que mide ---------- */
+function play9(){
+  const ch=$$('#chain9 .chip');ch.forEach(c=>c.classList.remove('on'));
+  if(REDUCE){ch.forEach(c=>c.classList.add('on'));return;}
+  ch.forEach((c,i)=>later('s9',()=>c.classList.add('on'),1600+i*380));
+}
+
+/* ---------- 12 · el piloto paso a paso ---------- */
+function play12(){
+  const pc=$$('#s12 .pc');pc.forEach(p=>p.classList.remove('on'));
+  pc.forEach((p,i)=>later('s12',()=>{p.classList.add('on');ping($('.ic',p));},900+i*420));
+}
+
+/* ---------- Pilar 04 · la semana de 168 horas ---------- */
+(function(){const w=$('#wk24'),days=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];let h='<span></span>';
+  for(let k=0;k<24;k++)h+=`<span class="hh">${k%6===0?String(k).padStart(2,'0')+':00':''}</span>`;
+  days.forEach((d,di)=>{h+=`<span class="dd">${d}</span>`;for(let k=0;k<24;k++){const cc=(di<5&&k>=9&&k<19)||(di===5&&k>=9&&k<14);h+=`<span class="c ${cc?'cc':'ad'}" data-d="${di}" data-h="${k}"></span>`;}});
+  w.innerHTML=h;const st=w.querySelector('.c[data-d="0"][data-h="19"]');const dot=document.createElement('span');dot.className='wdot';dot.id='wdot24';st.appendChild(dot);})();
+function play24(){
+  const cells=$$('#wk24 .c'),dot=$('#wdot24'),num=$('#hrs24');
+  cells.forEach(c=>c.classList.remove('on'));dot.classList.remove('in','out');num.textContent='0';
+  const cc=cells.filter(c=>c.classList.contains('cc')),ad=cells.filter(c=>c.classList.contains('ad'));
+  if(REDUCE){cells.forEach(c=>c.classList.add('on'));num.textContent='113';return;}
+  cc.forEach((c,i)=>later('s24',()=>c.classList.add('on'),700+i*12));
+  const t0=700+cc.length*12+800;
+  later('s24',()=>{dot.classList.add('in');},t0);
+  const t1=t0+600;
+  ad.forEach(c=>{const k=((+c.dataset.d)*24+(+c.dataset.h)-19+168)%168;later('s24',()=>c.classList.add('on'),t1+k*9);});
+  later('s24',()=>countTo(num,113,1300,0,'',''),t1);
+  later('s24',()=>dot.classList.add('out'),t1+168*9+300);
+}
+
+
+/* ---------- datos del vendedor (editar aquí) ---------- */
+const VENDEDOR={
+  agenda:'https://cal.com/gonzalo-guarda-ckfmvp/30-min',   // botón «Agendar una reunión»
+  whatsapp:''                                               // ej. '56912345678': muestra el botón WhatsApp
+};
+
+/* ---------- nombre de la clínica: ?clinica=Nombre o el campo de la portada ---------- */
+const CLI_KEY='addam-pitch-clinica';
+function setCliente(nombre){
+  nombre=(nombre||'').trim().slice(0,40);
+  try{nombre?localStorage.setItem(CLI_KEY,nombre):localStorage.removeItem(CLI_KEY);}catch(e){}
+  document.body.classList.toggle('no-cli',!nombre);
+  $$('.cname').forEach(el=>{el.textContent=nombre;const base=el.style.fontSize?72:84;
+    el.style.fontSize=(nombre.length>22?Math.round(base*.62):nombre.length>14?Math.round(base*.78):base)+'px';});
+  const inp=$('#cliIn'); if(inp&&inp.value!==nombre) inp.value=nombre;
+}
+(function(){
+  let n='';try{n=new URLSearchParams(location.search).get('clinica')||localStorage.getItem(CLI_KEY)||'';}catch(e){}
+  setCliente(n);
+  const inp=$('#cliIn');
+  inp.addEventListener('input',()=>setCliente(inp.value));
+  inp.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){inp.blur();}});
+  const d=new Date();$('#fechaHoy').textContent=d.toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'});
+  $('#ctaAgenda').href=VENDEDOR.agenda;
+  if(VENDEDOR.whatsapp){const w=$('#ctaWa');w.href='https://wa.me/'+VENDEDOR.whatsapp;w.hidden=false;}
+})();
+
+/* ---------- el punto ciego: el punto ADDAM recorre el camino y arregla cada fuga ---------- */
+const P_X=[199.75,621.25,1042.75,1464.25];
+function resetP(){
+  const s=$('#sP');s.classList.remove('done');
+  $$('.jn',s).forEach(n=>n.classList.remove('on'));$$('.leak',s).forEach(l=>l.classList.remove('fixed'));
+  const dot=$('#pDot'),fill=$('#pFill');dot.style.transition='none';fill.style.transition='none';
+  dot.style.left='24px';fill.style.width='0px';void dot.offsetWidth;dot.style.transition='';fill.style.transition='';
+}
+function runP(){
+  const s=$('#sP'),dot=$('#pDot'),fill=$('#pFill'),nodes=$$('.jn',s),leaks=$$('.leak',s);
+  const arrive=i=>{nodes[i].classList.add('on');leaks[i].classList.add('fixed');ping(dot);};
+  if(REDUCE){P_X.forEach((x,i)=>arrive(i));dot.style.left=P_X[3]+'px';fill.style.width=(P_X[3]-76)+'px';s.classList.add('done');return;}
+  let t=0;
+  P_X.forEach((x,i)=>{later('sP',()=>{dot.style.left=x+'px';fill.style.width=(x-76)+'px';},t);t+=900;later('sP',()=>arrive(i),t);t+=700;});
+  later('sP',()=>s.classList.add('done'),t+200);
+}
+
+/* ---------- calculadora ---------- */
+(function(){
+  const ids=['cCit','cTic','cAnu','cNoL','cDor'];
+  const clp=n=>'$'+Math.round(n).toLocaleString('es-CL');
+  const mm=n=>n>=1e6?'$'+(n/1e6).toLocaleString('es-CL',{maximumFractionDigits:1})+' M':clp(n);
+  function fill(el){el.style.setProperty('--p',((el.value-el.min)/(el.max-el.min)*100)+'%');}
+  function render(){
+    const cit=+$('#cCit').value,tic=+$('#cTic').value,anu=+$('#cAnu').value/100,nol=+$('#cNoL').value/100,dor=+$('#cDor').value;
+    $('#oCit').textContent=cit.toLocaleString('es-CL');$('#oTic').textContent=clp(tic);
+    $('#oAnu').textContent=$('#cAnu').value+'%';$('#oNoL').textContent=$('#cNoL').value+'%';$('#oDor').textContent=dor.toLocaleString('es-CL');
+    const pMes=Math.round(cit*anu*0.25+cit*nol*0.42), pCam=Math.round(dor*0.14);
+    $('#pMes').textContent=pMes.toLocaleString('es-CL');$('#rMes').textContent=mm(pMes*tic);
+    $('#pCam').textContent=pCam.toLocaleString('es-CL');$('#rCam').textContent=mm(pCam*tic);
+    ids.forEach(i=>fill($('#'+i)));
+  }
+  ids.forEach(i=>{const el=$('#'+i);el.addEventListener('input',render);el.addEventListener('keydown',e=>e.stopPropagation());});
+  render();
+})();
+
+/* ---------- presentación ---------- */
+const ENTER={sP:()=>resetP(),s24:play24,s1:playLogo,s10:playLogo,s15:playLogo,s2:play2,s4:()=>{playDots('#dots4a','s4',1300);playDots('#dots4b','s4',2000);},s5:()=>playDots('#dots5','s5'),s6:play6,s8:play8,s9:play9,s12:play12};
+class Deck{
+  constructor(){
+    this.slides=$$('.slide');this.stage=$('#stage');this.cur=-1;
+    this.scale();addEventListener('resize',()=>this.scale());
+    document.addEventListener('keydown',e=>{
+      if(e.target&&e.target.tagName==='INPUT')return;
+      if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();this.next();}
+      else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.go(this.cur-1);}
+      else if(e.key==='Home')this.go(0); else if(e.key==='End')this.go(this.slides.length-1);
+      else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{});}
+    });
+    $('#next').onclick=()=>this.next();$('#prev').onclick=()=>this.go(this.cur-1);
+    let sx=0;addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+    addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60){dx<0?this.next():this.go(this.cur-1);}},{passive:true});
+    const tot=this.slides.length;this.slides.forEach((sl,i)=>{const n=$('.num',sl);if(n)n.textContent=(i+1)+' / '+tot;});
+    let mt;addEventListener('mousemove',()=>{document.body.classList.add('mouse');clearTimeout(mt);mt=setTimeout(()=>document.body.classList.remove('mouse'),2200);});
+    const q=parseInt(new URLSearchParams(location.search).get('slide')||location.hash.replace('#',''),10);
+    this.go(isNaN(q)?0:q-1);
+  }
+  next(){const s=this.slides[this.cur];if(s&&this.builds>0){this.builds--;if(s.id==='sP')runP();return;}this.go(this.cur+1);}
+  scale(){const f=Math.min(innerWidth/1920,innerHeight/1080);this.stage.style.transform=`translate(${(innerWidth-1920*f)/2}px,${(innerHeight-1080*f)/2}px) scale(${f})`;}
+  go(n){
+    n=Math.max(0,Math.min(this.slides.length-1,n));if(n===this.cur)return;
+    const prev=this.slides[this.cur];if(prev){prev.classList.remove('visible');clearLater(prev.id);}
+    this.cur=n;const s=this.slides[n];this.builds=parseInt(s.dataset.builds||'0',10);s.classList.add('visible');
+    $('#progress').style.transform=`scaleX(${(n+1)/this.slides.length})`;
+    try{history.replaceState(null,'','#'+(n+1));}catch(e){}
+    playCounts(s);(ENTER[s.id]||(()=>{}))(s);
+    if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  }
+}
+new Deck();
+</script>
+</body>
+</html>

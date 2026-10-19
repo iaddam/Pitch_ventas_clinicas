@@ -2,3 +2,6 @@ calc-src.html
 .DS_Store
 CLAUDE.md
 .vercel
+
+# Tipografía comercial (Aeonik): no se sube suelta al repo público; va incrustada en los HTML
+fuente/assets/fonts/
