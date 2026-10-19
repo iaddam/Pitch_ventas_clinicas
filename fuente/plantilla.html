@@ -335,7 +335,7 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:var(--f);-webk
 
 /* ---------- navegación ---------- */
 #progress{position:absolute;left:0;bottom:0;height:8px;width:1920px;background:var(--blue);transform-origin:0 50%;transform:scaleX(0);transition:transform .5s var(--ease);z-index:40}
-#navb{position:absolute;right:40px;bottom:72px;z-index:41;display:flex;gap:10px;opacity:0;transition:opacity .3s}
+#navb{position:absolute;right:40px;top:28px;z-index:41;display:flex;gap:10px;opacity:0;transition:opacity .3s}
 body.mouse #navb{opacity:1}
 #navb button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,20,.6);color:#fff;font:inherit;font-size:20px;cursor:pointer}
 #navb button:hover{background:var(--blue);border-color:var(--blue)}
@@ -347,11 +347,25 @@ body.no-cli .cli-only{display:none!important}
   .slide .cobrand .cname{opacity:0;transform:translateX(-14px);transition:opacity .8s var(--ease-out) .3s,transform .8s var(--ease-out) .3s}
   .slide.logo-done .cobrand .cname{opacity:1;transform:none}
 }
-.cliedit{position:absolute;left:50%;top:868px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:10px 12px 10px 22px;border-radius:999px;
+.clogo{display:block;padding:18px 28px;border-radius:24px;background:#fff;box-shadow:0 14px 44px rgba(0,0,0,.45)}
+.clogo img{display:block;height:auto;width:auto;max-height:104px;max-width:460px}
+#s10 .clogo img{max-height:86px;max-width:400px}
+body.no-logo .logo-only,body.has-logo .name-only{display:none!important}
+@media (prefers-reduced-motion:no-preference){
+  .slide .cobrand .clogo{opacity:0;transform:translateX(-14px);transition:opacity .8s var(--ease-out) .3s,transform .8s var(--ease-out) .3s}
+  .slide.logo-done .cobrand .clogo{opacity:1;transform:none}
+}
+.cbtn{height:40px;padding:0 18px;border-radius:20px;border:1px solid rgba(254,254,254,.22);background:rgba(254,254,254,.06);color:#fff;font:inherit;font-size:16px;letter-spacing:0;text-transform:none;cursor:pointer;white-space:nowrap}
+.cbtn:hover{background:var(--blue);border-color:var(--blue)}
+.cbtn[hidden]{display:none}
+.clihint{position:absolute;left:0;right:0;top:936px;text-align:center;font-size:16px;color:var(--tx-3);opacity:0;transition:opacity .3s;z-index:5}
+body.mouse .clihint{opacity:1}
+#s1.drop-on::after{content:"Suelte aquí el logo de la clínica";position:absolute;inset:40px;border:3px dashed var(--blue-2);border-radius:32px;display:grid;place-items:center;font-size:36px;font-weight:700;color:#fff;background:rgba(2,67,255,.15);z-index:9}
+.cliedit{position:absolute;left:50%;top:868px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:10px 12px 10px 22px;border-radius:999px;
   background:rgba(254,254,254,.06);border:1px solid rgba(254,254,254,.16);font-size:17px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
   opacity:0;transition:opacity .3s;z-index:5}
 body.mouse .cliedit,.cliedit:focus-within{opacity:1}
-.cliedit input{width:460px;padding:8px 14px;border-radius:999px;border:0;outline:0;background:rgba(254,254,254,.08);color:#fff;font:inherit;font-size:20px;letter-spacing:0;text-transform:none}
+.cliedit input[type=text]{width:400px;padding:8px 14px;border-radius:999px;border:0;outline:0;background:rgba(254,254,254,.08);color:#fff;font:inherit;font-size:20px;letter-spacing:0;text-transform:none}
 .cliedit input:focus{background:rgba(46,102,255,.25)}
 
 /* ---------- 2 · el punto ciego (el punto ADDAM recorre y arregla cada fuga) ---------- */
@@ -441,7 +455,7 @@ body.mouse #sP:not(.done) .hintb{opacity:1}
 #s15 .cta[hidden]{display:none}
 #navb a{height:44px;padding:0 18px;border-radius:22px;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,20,.6);color:#fff;font-size:16px;font-weight:700;display:inline-flex;align-items:center;text-decoration:none}
 #navb a:hover{background:var(--blue);border-color:var(--blue)}
-@media print{.cliedit,#sP .hintb{display:none!important}}
+@media print{.cliedit,.clihint,#sP .hintb{display:none!important}}
 
 @media print{
   @page{size:1920px 1080px;margin:0}
@@ -463,13 +477,17 @@ body.mouse #sP:not(.done) .hintb{opacity:1}
   <div class="cobrand" style="top:218px">
     <video class="logo-anim" id="logo1" src="assets/video/logo-intro-dark.mp4" muted playsinline preload="auto" aria-label="ADDAM" style="width:685px;height:152px;margin:0 -137px"></video>
     <span class="x cli-only">×</span>
-    <span class="cname cli-only"></span>
+    <span class="cname cli-only name-only"></span>
+    <span class="clogo cli-only logo-only"><img alt=""></span>
   </div>
   <p class="after abs" style="left:0;right:0;top:403px;text-align:center;font-size:22.5px;letter-spacing:.3em;color:var(--tx-3)">{{EYEBROW_PORTADA}}</p>
   <h1 class="ctitle after a2" style="top:450px;font-size:105.5px">Que ningún paciente se quede<br><span>en el camino.</span></h1>
   <p class="after a3 abs" id="fechaHoy" style="left:128px;top:999px;font-size:24px;color:var(--tx-3)"></p>
   <p class="after a3 abs" style="right:128px;top:991px;display:flex;align-items:center;gap:22px;font-size:24px;color:var(--tx-3)">Meta Business Partner<span style="width:1.5px;height:30px;background:rgba(254,254,254,.25)"></span><img src="assets/img/corfo-blanco.png" alt="CORFO" style="height:40px;width:auto;opacity:.9"></p>
-  <label class="cliedit" for="cliIn">Clínica<input id="cliIn" type="text" autocomplete="off" spellcheck="false" placeholder="Escriba el nombre de la clínica y presione Enter"></label>
+  <div class="cliedit" id="cliEdit"><label for="cliIn">Clínica</label><input id="cliIn" type="text" autocomplete="off" spellcheck="false" placeholder="Nombre de la clínica">
+    <button type="button" class="cbtn" id="cliBuscar">Buscar logo ↗</button><button type="button" class="cbtn" id="cliSubir">Subir logo</button><button type="button" class="cbtn" id="cliQuitar" hidden>Quitar logo</button>
+    <input type="file" id="cliFile" accept="image/*" hidden></div>
+  <p class="clihint">Copie el logo desde Google o el sitio de la clínica y péguelo aquí (⌘V), o arrástrelo a la portada.</p>
 </section>
 
 <!-- ===================== EL PUNTO CIEGO =====================
@@ -775,7 +793,8 @@ body.mouse #sP:not(.done) .hintb{opacity:1}
   <div class="cobrand" style="top:222px">
     <video class="logo-anim" id="logo10" src="assets/video/logo-intro-dark.mp4" muted playsinline preload="auto" aria-label="ADDAM" style="width:590px;height:131px;margin:0 -118px"></video>
     <span class="x cli-only">×</span>
-    <span class="cname cli-only" style="font-size:72px"></span>
+    <span class="cname cli-only name-only" style="font-size:72px"></span>
+    <span class="clogo cli-only logo-only"><img alt=""></span>
   </div>
   <h2 class="ctitle after a2" style="top:414px;font-size:114px">Cada conversación es una<br><span>oportunidad.</span></h2>
 </section>
@@ -837,7 +856,8 @@ body.mouse #sP:not(.done) .hintb{opacity:1}
   <div class="cobrand" style="top:200px">
     <video class="logo-anim" id="logo15" src="assets/video/logo-intro-dark.mp4" muted playsinline preload="auto" aria-label="ADDAM" style="width:685px;height:152px;margin:0 -137px"></video>
     <span class="x cli-only">×</span>
-    <span class="cname cli-only"></span>
+    <span class="cname cli-only name-only"></span>
+    <span class="clogo cli-only logo-only"><img alt=""></span>
   </div>
   <h2 class="ctitle after a2" style="top:400px;font-size:150px">¿Partimos?</h2>
   <p class="after a3 abs" style="left:0;right:0;top:590px;text-align:center;font-size:32px;color:var(--tx-2)">Más de 80 clínicas ya trabajan con ADDAM.</p>
@@ -983,22 +1003,45 @@ const VENDEDOR={
   whatsapp:''                                               // ej. '56912345678': muestra el botón WhatsApp
 };
 
-/* ---------- nombre de la clínica: ?clinica=Nombre o el campo de la portada ---------- */
-const CLI_KEY='addam-pitch-clinica';
-function setCliente(nombre){
-  nombre=(nombre||'').trim().slice(0,40);
-  try{nombre?localStorage.setItem(CLI_KEY,nombre):localStorage.removeItem(CLI_KEY);}catch(e){}
-  document.body.classList.toggle('no-cli',!nombre);
-  $$('.cname').forEach(el=>{el.textContent=nombre;const base=el.style.fontSize?72:84;
-    el.style.fontSize=(nombre.length>22?Math.round(base*.62):nombre.length>14?Math.round(base*.78):base)+'px';});
-  const inp=$('#cliIn'); if(inp&&inp.value!==nombre) inp.value=nombre;
+/* ---------- nombre y logo de la clínica: ?clinica=Nombre o el campo de la portada ---------- */
+const CLI_KEY='addam-pitch-clinica', LOGO_KEY='addam-pitch-logo';
+let CLI='';
+function guarda(k,v){try{v?localStorage.setItem(k,v):localStorage.removeItem(k);}catch(e){}}
+function lee(k){try{return localStorage.getItem(k)||'';}catch(e){return '';}}
+function logoDe(nombre){try{const o=JSON.parse(lee(LOGO_KEY)||'null');return o&&o.n===nombre?o.d:'';}catch(e){return '';}}
+function pinta(){
+  const logo=CLI?logoDe(CLI):'';
+  document.body.classList.toggle('no-cli',!CLI);
+  document.body.classList.toggle('has-logo',!!logo);document.body.classList.toggle('no-logo',!logo);
+  $$('.clogo img').forEach(i=>{if(logo)i.src=logo;else i.removeAttribute('src');i.alt=CLI;});
+  $$('.cname').forEach(el=>{el.textContent=CLI;const base=el.style.fontSize&&parseInt(el.style.fontSize)<80?72:84;el.dataset.base=el.dataset.base||base;
+    const bs=+el.dataset.base;el.style.fontSize=(CLI.length>22?Math.round(bs*.62):CLI.length>14?Math.round(bs*.78):bs)+'px';});
+  $('#cliQuitar').hidden=!logo;
+}
+// el texto del campo no se toca mientras se escribe (así funcionan los espacios)
+function setCliente(nombre){CLI=(nombre||'').trim().slice(0,40);guarda(CLI_KEY,CLI);pinta();}
+function setLogo(dataUrl){if(!CLI){$('#cliIn').focus();return;}guarda(LOGO_KEY,dataUrl?JSON.stringify({n:CLI,d:dataUrl}):'');pinta();}
+function leeImagen(file){
+  if(!file||!file.type||!file.type.startsWith('image/'))return;
+  const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{
+    const k=Math.min(1,800/img.width,300/img.height),c=document.createElement('canvas');
+    c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    setLogo(c.toDataURL('image/png'));};img.src=r.result;};r.readAsDataURL(file);
 }
 (function(){
-  let n='';try{n=new URLSearchParams(location.search).get('clinica')||localStorage.getItem(CLI_KEY)||'';}catch(e){}
-  setCliente(n);
-  const inp=$('#cliIn');
+  let n='';try{n=new URLSearchParams(location.search).get('clinica')||lee(CLI_KEY);}catch(e){}
+  const inp=$('#cliIn');inp.value=n;setCliente(n);
   inp.addEventListener('input',()=>setCliente(inp.value));
   inp.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'){inp.blur();}});
+  $('#cliBuscar').onclick=()=>{const q=(CLI||'clínica')+' logo';window.open('https://www.google.com/search?tbm=isch&q='+encodeURIComponent(q),'_blank','noopener');};
+  $('#cliSubir').onclick=()=>$('#cliFile').click();
+  $('#cliFile').onchange=e=>{leeImagen(e.target.files[0]);e.target.value='';};
+  $('#cliQuitar').onclick=()=>setLogo('');
+  document.addEventListener('paste',e=>{const f=[...(e.clipboardData||{}).files||[]].find(x=>x.type.startsWith('image/'));if(f){e.preventDefault();leeImagen(f);}});
+  const s1=$('#s1');
+  ['dragenter','dragover'].forEach(t=>document.addEventListener(t,e=>{if([...(e.dataTransfer||{}).types||[]].includes('Files')){e.preventDefault();s1.classList.add('drop-on');}}));
+  ['dragleave','drop'].forEach(t=>document.addEventListener(t,e=>{if(t==='dragleave'&&e.relatedTarget)return;s1.classList.remove('drop-on');}));
+  document.addEventListener('drop',e=>{e.preventDefault();const f=[...(e.dataTransfer||{}).files||[]].find(x=>x.type.startsWith('image/'));if(f)leeImagen(f);});
   const d=new Date();$('#fechaHoy').textContent=d.toLocaleDateString('es-CL',{day:'numeric',month:'long',year:'numeric'});
   $('#ctaAgenda').href=VENDEDOR.agenda;
   if(VENDEDOR.whatsapp){const w=$('#ctaWa');w.href='https://wa.me/'+VENDEDOR.whatsapp;w.hidden=false;}
@@ -1047,7 +1090,7 @@ class Deck{
     this.slides=$$('.slide');this.stage=$('#stage');this.cur=-1;
     this.scale();addEventListener('resize',()=>this.scale());
     document.addEventListener('keydown',e=>{
-      if(e.target&&e.target.tagName==='INPUT')return;
+      if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON'))return;
       if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();this.next();}
       else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.go(this.cur-1);}
       else if(e.key==='Home')this.go(0); else if(e.key==='End')this.go(this.slides.length-1);
