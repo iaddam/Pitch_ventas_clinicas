@@ -35,6 +35,8 @@ VERSIONES = {
     'CHAT_PIDE': 'hacerme una limpieza', 'CHAT_COSA': 'la limpieza', 'CHAT_TU': 'tu limpieza', 'CHAT_PRO': 'la Dra. Soto',
     # calculadora
     'CALC_CITAS': '800', 'CALC_TICKET': '60000',
+    # láminas que no van en esta versión (por id)
+    'QUITAR': ['s7'],   # caso cupones: no aplica a todas las clínicas dentales
   },
   'salud.html': {
     'VERTICAL': 'salud',
@@ -67,8 +69,13 @@ def data_uri(ruta):
 plantilla = (FUENTE / 'plantilla.html').read_text(encoding='utf-8')
 for archivo, textos in VERSIONES.items():
     html = plantilla
+    for sid in textos.get('QUITAR', []):
+        i = html.index(f'id="{sid}"'); ini = html.rindex('<!-- =====', 0, html.rindex('<section', 0, i))
+        fin = html.index('</section>', i) + len('</section>')
+        html = html[:ini] + html[fin:]
     for clave, valor in textos.items():
-        html = html.replace('{{' + clave + '}}', valor)
+        if isinstance(valor, str):
+            html = html.replace('{{' + clave + '}}', valor)
     faltan = sorted(set(re.findall(r'\{\{([A-Z0-9_]+)\}\}', html)))
     assert not faltan, f'{archivo}: faltan textos para {faltan}'
     html = re.sub(r'assets/[A-Za-z0-9._/-]+\.(?:ttf|mp4|png|svg)', lambda m: data_uri(FUENTE / m.group(0)), html)
